@@ -1,13 +1,13 @@
 import { ReportForm } from "@/components/report-form";
 
-export default function NewReportPage() {
+export default function CreateReportPage() {
   return (
     <section className="stack">
       <div>
         <p className="eyebrow">Create</p>
-        <h2>Create a daily report</h2>
+        <h2>Create a report</h2>
         <p className="section-intro">
-          Fill out the form below to add a new construction progress report.
+          Add a simple site report with a date, site name, and summary text.
         </p>
       </div>
 

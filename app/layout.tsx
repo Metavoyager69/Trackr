@@ -23,7 +23,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </Link>
               <nav className="nav-links" aria-label="Primary navigation">
                 <Link href="/reports">Reports</Link>
-                <Link href="/reports/new">Create Report</Link>
+                <Link href="/reports/create">Create Report</Link>
               </nav>
             </div>
           </header>

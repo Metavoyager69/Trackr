@@ -14,7 +14,7 @@ export default function HomePage() {
         <Link className="button button-primary" href="/reports">
           View Reports
         </Link>
-        <Link className="button button-secondary" href="/reports/new">
+        <Link className="button button-secondary" href="/reports/create">
           Create a Report
         </Link>
       </div>

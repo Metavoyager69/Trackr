@@ -9,11 +9,10 @@ export default function ReportsPage() {
           <p className="eyebrow">Reports</p>
           <h2>Daily site reports</h2>
           <p className="section-intro">
-            Review recent updates from the construction site and open any report
-            for more detail.
+            Review recent site updates and open any report for more detail.
           </p>
         </div>
-        <Link className="button button-primary" href="/reports/new">
+        <Link className="button button-primary" href="/reports/create">
           New Report
         </Link>
       </div>

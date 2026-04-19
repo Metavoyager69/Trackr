@@ -2,24 +2,18 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Report, saveReport } from "@/lib/reports";
+import { Report, createReportId, saveReport } from "@/lib/reports";
 
 type FormState = {
-  projectName: string;
   date: string;
-  weather: string;
-  crewSize: number;
-  workCompleted: string;
-  notes: string;
+  siteName: string;
+  summary: string;
 };
 
 const initialFormState: FormState = {
-  projectName: "",
   date: new Date().toISOString().slice(0, 10),
-  weather: "",
-  crewSize: 8,
-  workCompleted: "",
-  notes: ""
+  siteName: "",
+  summary: ""
 };
 
 export function ReportForm() {
@@ -37,7 +31,7 @@ export function ReportForm() {
     event.preventDefault();
 
     const newReport: Report = {
-      id: createReportId(formState.projectName),
+      id: createReportId(formState.siteName),
       ...formState
     };
 
@@ -49,19 +43,7 @@ export function ReportForm() {
     <form className="form-card" onSubmit={handleSubmit}>
       <div className="field-grid">
         <div className="field">
-          <label htmlFor="projectName">Project name</label>
-          <input
-            id="projectName"
-            name="projectName"
-            onChange={(event) => updateField("projectName", event.target.value)}
-            placeholder="Central Plaza Tower"
-            required
-            value={formState.projectName}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="date">Report date</label>
+          <label htmlFor="date">Date</label>
           <input
             id="date"
             name="date"
@@ -73,58 +55,33 @@ export function ReportForm() {
         </div>
 
         <div className="field">
-          <label htmlFor="weather">Weather</label>
+          <label htmlFor="siteName">Site name</label>
           <input
-            id="weather"
-            name="weather"
-            onChange={(event) => updateField("weather", event.target.value)}
-            placeholder="Sunny"
+            id="siteName"
+            name="siteName"
+            onChange={(event) => updateField("siteName", event.target.value)}
+            placeholder="Central Plaza Tower"
             required
-            value={formState.weather}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="crewSize">Crew size</label>
-          <input
-            id="crewSize"
-            min={1}
-            name="crewSize"
-            onChange={(event) =>
-              updateField("crewSize", Number(event.target.value))
-            }
-            required
-            type="number"
-            value={formState.crewSize}
+            value={formState.siteName}
           />
         </div>
       </div>
 
       <div className="field">
-        <label htmlFor="workCompleted">Work completed</label>
+        <label htmlFor="summary">Summary text</label>
         <textarea
-          id="workCompleted"
-          name="workCompleted"
-          onChange={(event) => updateField("workCompleted", event.target.value)}
-          placeholder="Installed formwork for the second-floor slab."
+          id="summary"
+          name="summary"
+          onChange={(event) => updateField("summary", event.target.value)}
+          placeholder="Summarize the work completed on site today."
           required
-          value={formState.workCompleted}
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor="notes">Notes</label>
-        <textarea
-          id="notes"
-          name="notes"
-          onChange={(event) => updateField("notes", event.target.value)}
-          placeholder="Materials for tomorrow have been delivered."
-          value={formState.notes}
+          value={formState.summary}
         />
       </div>
 
       <p className="helper-text">
-        Reports are saved in the browser for now to keep the example simple.
+        Reports are stored temporarily in your browser for now. No database is
+        connected yet.
       </p>
 
       <div className="action-row">
@@ -134,14 +91,4 @@ export function ReportForm() {
       </div>
     </form>
   );
-}
-
-function createReportId(projectName: string) {
-  const slug = projectName
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  return `${slug || "site-report"}-${Date.now()}`;
 }

@@ -32,7 +32,7 @@ export function ReportDetail({ reportId }: ReportDetailProps) {
           <Link className="button button-secondary" href="/reports">
             Back to Reports
           </Link>
-          <Link className="button button-primary" href="/reports/new">
+          <Link className="button button-primary" href="/reports/create">
             Create Report
           </Link>
         </div>
@@ -45,9 +45,9 @@ export function ReportDetail({ reportId }: ReportDetailProps) {
       <div className="page-header">
         <div>
           <p className="eyebrow">{formatReportDate(report.date)}</p>
-          <h2>{report.projectName}</h2>
+          <h2>{report.siteName}</h2>
           <p className="section-intro">
-            Review the daily work summary, crew size, weather, and site notes.
+            Review the site name, report date, and summary for this entry.
           </p>
         </div>
         <Link className="button button-secondary" href="/reports">
@@ -58,23 +58,18 @@ export function ReportDetail({ reportId }: ReportDetailProps) {
       <article className="detail-card">
         <div className="detail-grid">
           <div className="detail-block">
-            <span className="meta-label">Weather</span>
-            <p className="meta-value">{report.weather}</p>
+            <span className="meta-label">Site Name</span>
+            <p className="meta-value">{report.siteName}</p>
           </div>
 
           <div className="detail-block">
-            <span className="meta-label">Crew Size</span>
-            <p className="meta-value">{report.crewSize} workers</p>
+            <span className="meta-label">Date</span>
+            <p className="meta-value">{formatReportDate(report.date)}</p>
           </div>
 
           <div className="detail-block detail-block-wide">
-            <span className="meta-label">Work Completed</span>
-            <p>{report.workCompleted}</p>
-          </div>
-
-          <div className="detail-block detail-block-wide">
-            <span className="meta-label">Notes</span>
-            <p>{report.notes || "No additional notes for this report."}</p>
+            <span className="meta-label">Summary</span>
+            <p>{report.summary}</p>
           </div>
         </div>
       </article>
