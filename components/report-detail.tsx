@@ -1,0 +1,83 @@
+"use client";
+
+import Link from "next/link";
+import { useSyncExternalStore } from "react";
+import {
+  formatReportDate,
+  getReportById,
+  getSeedReportById,
+  subscribeToReports
+} from "@/lib/reports";
+
+type ReportDetailProps = {
+  reportId: string;
+};
+
+export function ReportDetail({ reportId }: ReportDetailProps) {
+  const report = useSyncExternalStore(
+    subscribeToReports,
+    () => getReportById(reportId),
+    () => getSeedReportById(reportId)
+  );
+
+  if (!report) {
+    return (
+      <section className="empty-state">
+        <h2>Report not found</h2>
+        <p className="muted">
+          This report may have been removed or has not been created in this
+          browser yet.
+        </p>
+        <div className="action-row">
+          <Link className="button button-secondary" href="/reports">
+            Back to Reports
+          </Link>
+          <Link className="button button-primary" href="/reports/new">
+            Create Report
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="stack">
+      <div className="page-header">
+        <div>
+          <p className="eyebrow">{formatReportDate(report.date)}</p>
+          <h2>{report.projectName}</h2>
+          <p className="section-intro">
+            Review the daily work summary, crew size, weather, and site notes.
+          </p>
+        </div>
+        <Link className="button button-secondary" href="/reports">
+          Back to Reports
+        </Link>
+      </div>
+
+      <article className="detail-card">
+        <div className="detail-grid">
+          <div className="detail-block">
+            <span className="meta-label">Weather</span>
+            <p className="meta-value">{report.weather}</p>
+          </div>
+
+          <div className="detail-block">
+            <span className="meta-label">Crew Size</span>
+            <p className="meta-value">{report.crewSize} workers</p>
+          </div>
+
+          <div className="detail-block detail-block-wide">
+            <span className="meta-label">Work Completed</span>
+            <p>{report.workCompleted}</p>
+          </div>
+
+          <div className="detail-block detail-block-wide">
+            <span className="meta-label">Notes</span>
+            <p>{report.notes || "No additional notes for this report."}</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  );
+}
