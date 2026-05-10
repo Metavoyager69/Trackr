@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Construction Daily Reports",
-  description: "A minimal daily reporting system for construction teams."
+  title: "Trackr",
+  description: "Industrial-style construction reporting dashboard."
 };
 
 type RootLayoutProps = {
@@ -13,21 +14,25 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html className="dark" lang="en">
       <body>
         <div className="site-shell">
-          <header className="site-header">
-            <div className="container nav-row">
-              <Link className="brand" href="/">
-                BuildLog
-              </Link>
-              <nav className="nav-links" aria-label="Primary navigation">
+          <SiteNav />
+          <main className="page-shell">{children}</main>
+          <footer className="site-footer">
+            <div className="site-footer-row">
+              <div className="footer-copy">
+                <span>Precision Industrialism</span>
+                <span>Reporting Layer Active</span>
+              </div>
+              <div className="footer-links">
+                <Link href="/">Dashboard</Link>
+                <Link href="/projects">Projects</Link>
                 <Link href="/reports">Reports</Link>
-                <Link href="/reports/create">Create Report</Link>
-              </nav>
+                <Link href="/projects/create">Create Project</Link>
+              </div>
             </div>
-          </header>
-          <main className="container page-content">{children}</main>
+          </footer>
         </div>
       </body>
     </html>

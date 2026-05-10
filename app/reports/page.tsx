@@ -1,23 +1,40 @@
 import Link from "next/link";
 import { ReportList } from "@/components/report-list";
+import { getReports, isDatabaseConfigured } from "@/lib/reports";
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
+  const reports = await getReports();
+  const databaseConfigured = isDatabaseConfigured();
+
   return (
-    <section className="stack">
+    <section className="dashboard-stack">
       <div className="page-header">
         <div>
-          <p className="eyebrow">Reports</p>
-          <h2>Daily site reports</h2>
-          <p className="section-intro">
-            Review recent site updates and open any report for more detail.
+          <p className="section-label">Archive</p>
+          <h1 className="page-title">Report Ledger</h1>
+          <p className="page-copy">
+            Browse every logged project snapshot, including planned progress,
+            actual progress, and overall completion values.
           </p>
         </div>
-        <Link className="button button-primary" href="/reports/create">
-          New Report
-        </Link>
+        <div className="page-header-actions">
+          <span
+            className={`status-pill ${
+              databaseConfigured ? "status-pill-live" : "status-pill-muted"
+            }`}
+          >
+            {databaseConfigured ? "DATABASE LIVE" : "DATABASE REQUIRED"}
+          </span>
+          <Link className="nav-button nav-button-secondary" href="/projects">
+            Projects
+          </Link>
+          <Link className="nav-button nav-button-primary" href="/reports/create">
+            New Report
+          </Link>
+        </div>
       </div>
 
-      <ReportList />
+      <ReportList databaseConfigured={databaseConfigured} reports={reports} />
     </section>
   );
 }
