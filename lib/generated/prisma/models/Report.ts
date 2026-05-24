@@ -27,12 +27,14 @@ export type AggregateReport = {
 }
 
 export type ReportAvgAggregateOutputType = {
+  workersOnSite: number | null
   plannedProgressPct: number | null
   actualProgressPct: number | null
   completionPct: number | null
 }
 
 export type ReportSumAggregateOutputType = {
+  workersOnSite: number | null
   plannedProgressPct: number | null
   actualProgressPct: number | null
   completionPct: number | null
@@ -43,6 +45,7 @@ export type ReportMinAggregateOutputType = {
   projectId: string | null
   date: Date | null
   summary: string | null
+  workersOnSite: number | null
   plannedProgressPct: number | null
   actualProgressPct: number | null
   completionPct: number | null
@@ -55,6 +58,7 @@ export type ReportMaxAggregateOutputType = {
   projectId: string | null
   date: Date | null
   summary: string | null
+  workersOnSite: number | null
   plannedProgressPct: number | null
   actualProgressPct: number | null
   completionPct: number | null
@@ -67,6 +71,7 @@ export type ReportCountAggregateOutputType = {
   projectId: number
   date: number
   summary: number
+  workersOnSite: number
   plannedProgressPct: number
   actualProgressPct: number
   completionPct: number
@@ -77,12 +82,14 @@ export type ReportCountAggregateOutputType = {
 
 
 export type ReportAvgAggregateInputType = {
+  workersOnSite?: true
   plannedProgressPct?: true
   actualProgressPct?: true
   completionPct?: true
 }
 
 export type ReportSumAggregateInputType = {
+  workersOnSite?: true
   plannedProgressPct?: true
   actualProgressPct?: true
   completionPct?: true
@@ -93,6 +100,7 @@ export type ReportMinAggregateInputType = {
   projectId?: true
   date?: true
   summary?: true
+  workersOnSite?: true
   plannedProgressPct?: true
   actualProgressPct?: true
   completionPct?: true
@@ -105,6 +113,7 @@ export type ReportMaxAggregateInputType = {
   projectId?: true
   date?: true
   summary?: true
+  workersOnSite?: true
   plannedProgressPct?: true
   actualProgressPct?: true
   completionPct?: true
@@ -117,6 +126,7 @@ export type ReportCountAggregateInputType = {
   projectId?: true
   date?: true
   summary?: true
+  workersOnSite?: true
   plannedProgressPct?: true
   actualProgressPct?: true
   completionPct?: true
@@ -215,7 +225,8 @@ export type ReportGroupByOutputType = {
   id: string
   projectId: string
   date: Date
-  summary: string
+  summary: string | null
+  workersOnSite: number
   plannedProgressPct: number | null
   actualProgressPct: number | null
   completionPct: number | null
@@ -250,26 +261,30 @@ export type ReportWhereInput = {
   id?: Prisma.StringFilter<"Report"> | string
   projectId?: Prisma.StringFilter<"Report"> | string
   date?: Prisma.DateTimeFilter<"Report"> | Date | string
-  summary?: Prisma.StringFilter<"Report"> | string
+  summary?: Prisma.StringNullableFilter<"Report"> | string | null
+  workersOnSite?: Prisma.IntFilter<"Report"> | number
   plannedProgressPct?: Prisma.IntNullableFilter<"Report"> | number | null
   actualProgressPct?: Prisma.IntNullableFilter<"Report"> | number | null
   completionPct?: Prisma.IntNullableFilter<"Report"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Report"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Report"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  workItems?: Prisma.ReportWorkItemListRelationFilter
 }
 
 export type ReportOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   date?: Prisma.SortOrder
-  summary?: Prisma.SortOrder
+  summary?: Prisma.SortOrderInput | Prisma.SortOrder
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrderInput | Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrderInput | Prisma.SortOrder
   completionPct?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  workItems?: Prisma.ReportWorkItemOrderByRelationAggregateInput
 }
 
 export type ReportWhereUniqueInput = Prisma.AtLeast<{
@@ -279,20 +294,23 @@ export type ReportWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
   projectId?: Prisma.StringFilter<"Report"> | string
   date?: Prisma.DateTimeFilter<"Report"> | Date | string
-  summary?: Prisma.StringFilter<"Report"> | string
+  summary?: Prisma.StringNullableFilter<"Report"> | string | null
+  workersOnSite?: Prisma.IntFilter<"Report"> | number
   plannedProgressPct?: Prisma.IntNullableFilter<"Report"> | number | null
   actualProgressPct?: Prisma.IntNullableFilter<"Report"> | number | null
   completionPct?: Prisma.IntNullableFilter<"Report"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Report"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Report"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  workItems?: Prisma.ReportWorkItemListRelationFilter
 }, "id">
 
 export type ReportOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   date?: Prisma.SortOrder
-  summary?: Prisma.SortOrder
+  summary?: Prisma.SortOrderInput | Prisma.SortOrder
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrderInput | Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrderInput | Prisma.SortOrder
   completionPct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,7 +330,8 @@ export type ReportScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Report"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"Report"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"Report"> | Date | string
-  summary?: Prisma.StringWithAggregatesFilter<"Report"> | string
+  summary?: Prisma.StringNullableWithAggregatesFilter<"Report"> | string | null
+  workersOnSite?: Prisma.IntWithAggregatesFilter<"Report"> | number
   plannedProgressPct?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
   actualProgressPct?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
   completionPct?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
@@ -323,56 +342,65 @@ export type ReportScalarWhereWithAggregatesInput = {
 export type ReportCreateInput = {
   id?: string
   date: Date | string
-  summary: string
+  summary?: string | null
+  workersOnSite?: number
   plannedProgressPct?: number | null
   actualProgressPct?: number | null
   completionPct?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutReportsInput
+  workItems?: Prisma.ReportWorkItemCreateNestedManyWithoutReportInput
 }
 
 export type ReportUncheckedCreateInput = {
   id?: string
   projectId: string
   date: Date | string
-  summary: string
+  summary?: string | null
+  workersOnSite?: number
   plannedProgressPct?: number | null
   actualProgressPct?: number | null
   completionPct?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  workItems?: Prisma.ReportWorkItemUncheckedCreateNestedManyWithoutReportInput
 }
 
 export type ReportUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutReportsNestedInput
+  workItems?: Prisma.ReportWorkItemUpdateManyWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workItems?: Prisma.ReportWorkItemUncheckedUpdateManyWithoutReportNestedInput
 }
 
 export type ReportCreateManyInput = {
   id?: string
   projectId: string
   date: Date | string
-  summary: string
+  summary?: string | null
+  workersOnSite?: number
   plannedProgressPct?: number | null
   actualProgressPct?: number | null
   completionPct?: number | null
@@ -383,7 +411,8 @@ export type ReportCreateManyInput = {
 export type ReportUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -395,7 +424,8 @@ export type ReportUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -418,6 +448,7 @@ export type ReportCountOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrder
   completionPct?: Prisma.SortOrder
@@ -426,6 +457,7 @@ export type ReportCountOrderByAggregateInput = {
 }
 
 export type ReportAvgOrderByAggregateInput = {
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrder
   completionPct?: Prisma.SortOrder
@@ -436,6 +468,7 @@ export type ReportMaxOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrder
   completionPct?: Prisma.SortOrder
@@ -448,6 +481,7 @@ export type ReportMinOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   summary?: Prisma.SortOrder
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrder
   completionPct?: Prisma.SortOrder
@@ -456,9 +490,15 @@ export type ReportMinOrderByAggregateInput = {
 }
 
 export type ReportSumOrderByAggregateInput = {
+  workersOnSite?: Prisma.SortOrder
   plannedProgressPct?: Prisma.SortOrder
   actualProgressPct?: Prisma.SortOrder
   completionPct?: Prisma.SortOrder
+}
+
+export type ReportScalarRelationFilter = {
+  is?: Prisma.ReportWhereInput
+  isNot?: Prisma.ReportWhereInput
 }
 
 export type ReportCreateNestedManyWithoutProjectInput = {
@@ -503,6 +543,18 @@ export type ReportUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -511,26 +563,44 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type ReportCreateNestedOneWithoutWorkItemsInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutWorkItemsInput, Prisma.ReportUncheckedCreateWithoutWorkItemsInput>
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutWorkItemsInput
+  connect?: Prisma.ReportWhereUniqueInput
+}
+
+export type ReportUpdateOneRequiredWithoutWorkItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutWorkItemsInput, Prisma.ReportUncheckedCreateWithoutWorkItemsInput>
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutWorkItemsInput
+  upsert?: Prisma.ReportUpsertWithoutWorkItemsInput
+  connect?: Prisma.ReportWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReportUpdateToOneWithWhereWithoutWorkItemsInput, Prisma.ReportUpdateWithoutWorkItemsInput>, Prisma.ReportUncheckedUpdateWithoutWorkItemsInput>
+}
+
 export type ReportCreateWithoutProjectInput = {
   id?: string
   date: Date | string
-  summary: string
+  summary?: string | null
+  workersOnSite?: number
   plannedProgressPct?: number | null
   actualProgressPct?: number | null
   completionPct?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  workItems?: Prisma.ReportWorkItemCreateNestedManyWithoutReportInput
 }
 
 export type ReportUncheckedCreateWithoutProjectInput = {
   id?: string
   date: Date | string
-  summary: string
+  summary?: string | null
+  workersOnSite?: number
   plannedProgressPct?: number | null
   actualProgressPct?: number | null
   completionPct?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  workItems?: Prisma.ReportWorkItemUncheckedCreateNestedManyWithoutReportInput
 }
 
 export type ReportCreateOrConnectWithoutProjectInput = {
@@ -566,7 +636,8 @@ export type ReportScalarWhereInput = {
   id?: Prisma.StringFilter<"Report"> | string
   projectId?: Prisma.StringFilter<"Report"> | string
   date?: Prisma.DateTimeFilter<"Report"> | Date | string
-  summary?: Prisma.StringFilter<"Report"> | string
+  summary?: Prisma.StringNullableFilter<"Report"> | string | null
+  workersOnSite?: Prisma.IntFilter<"Report"> | number
   plannedProgressPct?: Prisma.IntNullableFilter<"Report"> | number | null
   actualProgressPct?: Prisma.IntNullableFilter<"Report"> | number | null
   completionPct?: Prisma.IntNullableFilter<"Report"> | number | null
@@ -574,10 +645,79 @@ export type ReportScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Report"> | Date | string
 }
 
+export type ReportCreateWithoutWorkItemsInput = {
+  id?: string
+  date: Date | string
+  summary?: string | null
+  workersOnSite?: number
+  plannedProgressPct?: number | null
+  actualProgressPct?: number | null
+  completionPct?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutReportsInput
+}
+
+export type ReportUncheckedCreateWithoutWorkItemsInput = {
+  id?: string
+  projectId: string
+  date: Date | string
+  summary?: string | null
+  workersOnSite?: number
+  plannedProgressPct?: number | null
+  actualProgressPct?: number | null
+  completionPct?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReportCreateOrConnectWithoutWorkItemsInput = {
+  where: Prisma.ReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportCreateWithoutWorkItemsInput, Prisma.ReportUncheckedCreateWithoutWorkItemsInput>
+}
+
+export type ReportUpsertWithoutWorkItemsInput = {
+  update: Prisma.XOR<Prisma.ReportUpdateWithoutWorkItemsInput, Prisma.ReportUncheckedUpdateWithoutWorkItemsInput>
+  create: Prisma.XOR<Prisma.ReportCreateWithoutWorkItemsInput, Prisma.ReportUncheckedCreateWithoutWorkItemsInput>
+  where?: Prisma.ReportWhereInput
+}
+
+export type ReportUpdateToOneWithWhereWithoutWorkItemsInput = {
+  where?: Prisma.ReportWhereInput
+  data: Prisma.XOR<Prisma.ReportUpdateWithoutWorkItemsInput, Prisma.ReportUncheckedUpdateWithoutWorkItemsInput>
+}
+
+export type ReportUpdateWithoutWorkItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutReportsNestedInput
+}
+
+export type ReportUncheckedUpdateWithoutWorkItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ReportCreateManyProjectInput = {
   id?: string
   date: Date | string
-  summary: string
+  summary?: string | null
+  workersOnSite?: number
   plannedProgressPct?: number | null
   actualProgressPct?: number | null
   completionPct?: number | null
@@ -588,29 +728,34 @@ export type ReportCreateManyProjectInput = {
 export type ReportUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workItems?: Prisma.ReportWorkItemUpdateManyWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workItems?: Prisma.ReportWorkItemUncheckedUpdateManyWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  summary?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workersOnSite?: Prisma.IntFieldUpdateOperationsInput | number
   plannedProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualProgressPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   completionPct?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -618,6 +763,35 @@ export type ReportUncheckedUpdateManyWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type ReportCountOutputType
+ */
+
+export type ReportCountOutputType = {
+  workItems: number
+}
+
+export type ReportCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  workItems?: boolean | ReportCountOutputTypeCountWorkItemsArgs
+}
+
+/**
+ * ReportCountOutputType without action
+ */
+export type ReportCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReportCountOutputType
+   */
+  select?: Prisma.ReportCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ReportCountOutputType without action
+ */
+export type ReportCountOutputTypeCountWorkItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportWorkItemWhereInput
+}
 
 
 export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -625,12 +799,15 @@ export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   projectId?: boolean
   date?: boolean
   summary?: boolean
+  workersOnSite?: boolean
   plannedProgressPct?: boolean
   actualProgressPct?: boolean
   completionPct?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  workItems?: boolean | Prisma.Report$workItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.ReportCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["report"]>
 
 export type ReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -638,6 +815,7 @@ export type ReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   projectId?: boolean
   date?: boolean
   summary?: boolean
+  workersOnSite?: boolean
   plannedProgressPct?: boolean
   actualProgressPct?: boolean
   completionPct?: boolean
@@ -651,6 +829,7 @@ export type ReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   projectId?: boolean
   date?: boolean
   summary?: boolean
+  workersOnSite?: boolean
   plannedProgressPct?: boolean
   actualProgressPct?: boolean
   completionPct?: boolean
@@ -664,6 +843,7 @@ export type ReportSelectScalar = {
   projectId?: boolean
   date?: boolean
   summary?: boolean
+  workersOnSite?: boolean
   plannedProgressPct?: boolean
   actualProgressPct?: boolean
   completionPct?: boolean
@@ -671,9 +851,11 @@ export type ReportSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "date" | "summary" | "plannedProgressPct" | "actualProgressPct" | "completionPct" | "createdAt" | "updatedAt", ExtArgs["result"]["report"]>
+export type ReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "date" | "summary" | "workersOnSite" | "plannedProgressPct" | "actualProgressPct" | "completionPct" | "createdAt" | "updatedAt", ExtArgs["result"]["report"]>
 export type ReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  workItems?: boolean | Prisma.Report$workItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.ReportCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ReportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -686,12 +868,14 @@ export type $ReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Report"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
+    workItems: Prisma.$ReportWorkItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     projectId: string
     date: Date
-    summary: string
+    summary: string | null
+    workersOnSite: number
     plannedProgressPct: number | null
     actualProgressPct: number | null
     completionPct: number | null
@@ -1092,6 +1276,7 @@ readonly fields: ReportFieldRefs;
 export interface Prisma__ReportClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  workItems<T extends Prisma.Report$workItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$workItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportWorkItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1125,6 +1310,7 @@ export interface ReportFieldRefs {
   readonly projectId: Prisma.FieldRef<"Report", 'String'>
   readonly date: Prisma.FieldRef<"Report", 'DateTime'>
   readonly summary: Prisma.FieldRef<"Report", 'String'>
+  readonly workersOnSite: Prisma.FieldRef<"Report", 'Int'>
   readonly plannedProgressPct: Prisma.FieldRef<"Report", 'Int'>
   readonly actualProgressPct: Prisma.FieldRef<"Report", 'Int'>
   readonly completionPct: Prisma.FieldRef<"Report", 'Int'>
@@ -1528,6 +1714,30 @@ export type ReportDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Reports to delete.
    */
   limit?: number
+}
+
+/**
+ * Report.workItems
+ */
+export type Report$workItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReportWorkItem
+   */
+  select?: Prisma.ReportWorkItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReportWorkItem
+   */
+  omit?: Prisma.ReportWorkItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportWorkItemInclude<ExtArgs> | null
+  where?: Prisma.ReportWorkItemWhereInput
+  orderBy?: Prisma.ReportWorkItemOrderByWithRelationInput | Prisma.ReportWorkItemOrderByWithRelationInput[]
+  cursor?: Prisma.ReportWorkItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportWorkItemScalarFieldEnum | Prisma.ReportWorkItemScalarFieldEnum[]
 }
 
 /**

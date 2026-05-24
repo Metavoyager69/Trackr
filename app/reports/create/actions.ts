@@ -19,23 +19,38 @@ export async function createReportAction(
   const date = getFormValue(formData, "date");
   const projectId = getFormValue(formData, "projectId");
   const summary = getFormValue(formData, "summary");
+  const workersOnSite = parseWholeNumber(formData, "workersOnSite");
   const plannedProgressPct = parsePercentage(formData, "plannedProgressPct");
   const actualProgressPct = parsePercentage(formData, "actualProgressPct");
   const completionPct = parsePercentage(formData, "completionPct");
+  const workItems = parseWorkItems(formData);
 
-  if (!date || !projectId || !summary) {
+  if (!date || !projectId) {
     return {
-      error: "Please fill in the project, date, and summary."
+      error: "Please fill in the project and date."
     };
   }
 
   if (
+    workersOnSite === null ||
     plannedProgressPct === null ||
     actualProgressPct === null ||
     completionPct === null
   ) {
     return {
-      error: "Progress values must be whole numbers from 0 to 100."
+      error: "Workers on site and progress values must be whole numbers."
+    };
+  }
+
+  if (workersOnSite < 0) {
+    return {
+      error: "Workers on site cannot be negative."
+    };
+  }
+
+  if (workItems.length === 0) {
+    return {
+      error: "Add at least one work item to the daily report."
     };
   }
 
@@ -50,9 +65,11 @@ export async function createReportAction(
       projectId,
       date,
       summary,
+      workersOnSite,
       plannedProgressPct,
       actualProgressPct,
-      completionPct
+      completionPct,
+      workItems
     });
 
     revalidatePath("/");
@@ -74,17 +91,66 @@ function getFormValue(formData: FormData, key: string) {
 }
 
 function parsePercentage(formData: FormData, key: string) {
+  const parsedValue = parseWholeNumber(formData, key);
+
+  if (parsedValue === null || parsedValue < 0 || parsedValue > 100) {
+    return null;
+  }
+
+  return parsedValue;
+}
+
+function parseWholeNumber(formData: FormData, key: string) {
   const value = getFormValue(formData, key);
 
   if (!/^\d+$/.test(value)) {
     return null;
   }
 
-  const parsedValue = Number.parseInt(value, 10);
+  return Number.parseInt(value, 10);
+}
 
-  if (parsedValue < 0 || parsedValue > 100) {
-    return null;
+function parseWorkItems(formData: FormData) {
+  const rawValue = getFormValue(formData, "workItemsJson");
+
+  if (!rawValue) {
+    return [];
   }
 
-  return parsedValue;
+  try {
+    const parsedValue = JSON.parse(rawValue);
+
+    if (!Array.isArray(parsedValue)) {
+      return [];
+    }
+
+    return parsedValue
+      .map((workItem) => ({
+        contractor:
+          typeof workItem?.contractor === "string"
+            ? workItem.contractor.trim()
+            : "",
+        workDescription:
+          typeof workItem?.workDescription === "string"
+            ? workItem.workDescription.trim()
+            : "",
+        engineerName:
+          typeof workItem?.engineerName === "string"
+            ? workItem.engineerName.trim()
+            : "",
+        location:
+          typeof workItem?.location === "string"
+            ? workItem.location.trim()
+            : ""
+      }))
+      .filter(
+        (workItem) =>
+          workItem.contractor &&
+          workItem.workDescription &&
+          workItem.engineerName &&
+          workItem.location
+      );
+  } catch {
+    return [];
+  }
 }

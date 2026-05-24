@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import type { ProjectOption } from "@/lib/projects";
 import {
   createReportAction,
@@ -17,6 +18,9 @@ export function ReportForm({
   databaseConfigured,
   projects
 }: ReportFormProps) {
+  const [workItems, setWorkItems] = useState([
+    createEmptyWorkItem()
+  ]);
   const [state, formAction, isPending] = useActionState(
     createReportAction,
     initialCreateReportFormState
@@ -85,14 +89,27 @@ export function ReportForm({
       </div>
 
       <div className="field">
-        <label htmlFor="summary">Summary text</label>
+        <label htmlFor="summary">Summary text (optional)</label>
         <textarea
           className="form-input form-textarea"
           disabled={isFormDisabled}
           id="summary"
           name="summary"
-          placeholder="Summarize the work completed on site today."
+          placeholder="Optional high-level note for the day."
+        />
+      </div>
+
+      <div className="field">
+        <label htmlFor="workersOnSite">Workers on site</label>
+        <input
+          className="form-input"
+          disabled={isFormDisabled}
+          id="workersOnSite"
+          min={0}
+          name="workersOnSite"
           required
+          step={1}
+          type="number"
         />
       </div>
 
@@ -143,9 +160,107 @@ export function ReportForm({
         </div>
       </div>
 
+      <input
+        name="workItemsJson"
+        type="hidden"
+        value={JSON.stringify(workItems)}
+      />
+
+      <div className="field">
+        <div className="work-items-header">
+          <div>
+            <label>Work items table</label>
+            <p className="helper-text">
+              Log the contractor, work description, supervising engineer, and
+              location for each activity row.
+            </p>
+          </div>
+          <button
+            className="nav-button nav-button-secondary"
+            disabled={isFormDisabled}
+            onClick={() => setWorkItems((currentItems) => [...currentItems, createEmptyWorkItem()])}
+            type="button"
+          >
+            Add Row
+          </button>
+        </div>
+
+        <div className="work-items-shell">
+          <div className="work-items-grid work-items-grid-head">
+            <span>Contractor</span>
+            <span>Work Done</span>
+            <span>Engineer</span>
+            <span>Location</span>
+            <span>Action</span>
+          </div>
+
+          {workItems.map((workItem, index) => (
+            <div className="work-items-grid" key={index}>
+              <input
+                className="form-input"
+                disabled={isFormDisabled}
+                onChange={(event) =>
+                  updateWorkItem(setWorkItems, index, "contractor", event.target.value)
+                }
+                placeholder="ABC Construction"
+                type="text"
+                value={workItem.contractor}
+              />
+              <input
+                className="form-input"
+                disabled={isFormDisabled}
+                onChange={(event) =>
+                  updateWorkItem(
+                    setWorkItems,
+                    index,
+                    "workDescription",
+                    event.target.value
+                  )
+                }
+                placeholder="Excavation and blinding"
+                type="text"
+                value={workItem.workDescription}
+              />
+              <input
+                className="form-input"
+                disabled={isFormDisabled}
+                onChange={(event) =>
+                  updateWorkItem(setWorkItems, index, "engineerName", event.target.value)
+                }
+                placeholder="Engr. Adebayo"
+                type="text"
+                value={workItem.engineerName}
+              />
+              <input
+                className="form-input"
+                disabled={isFormDisabled}
+                onChange={(event) =>
+                  updateWorkItem(setWorkItems, index, "location", event.target.value)
+                }
+                placeholder="Zone A"
+                type="text"
+                value={workItem.location}
+              />
+              <button
+                className="nav-button nav-button-secondary work-item-remove"
+                disabled={isFormDisabled || workItems.length === 1}
+                onClick={() =>
+                  setWorkItems((currentItems) =>
+                    currentItems.filter((_, itemIndex) => itemIndex !== index)
+                  )
+                }
+                type="button"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <p className="helper-text">
-        Each report stores a dated snapshot of planned, actual, and overall
-        project completion percentages.
+        Each report stores a dated project snapshot, workforce count, and a
+        table of work activities for the day.
       </p>
 
       {state.error ? (
@@ -164,5 +279,34 @@ export function ReportForm({
         </button>
       </div>
     </form>
+  );
+}
+
+type WorkItemDraft = {
+  contractor: string;
+  workDescription: string;
+  engineerName: string;
+  location: string;
+};
+
+function createEmptyWorkItem(): WorkItemDraft {
+  return {
+    contractor: "",
+    workDescription: "",
+    engineerName: "",
+    location: ""
+  };
+}
+
+function updateWorkItem(
+  setWorkItems: Dispatch<SetStateAction<WorkItemDraft[]>>,
+  index: number,
+  key: keyof WorkItemDraft,
+  value: string
+) {
+  setWorkItems((currentItems) =>
+    currentItems.map((workItem, itemIndex) =>
+      itemIndex === index ? { ...workItem, [key]: value } : workItem
+    )
   );
 }

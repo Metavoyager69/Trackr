@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Report } from "@/lib/reports";
 import {
+  getReportHeadline,
+  getReportSubline,
   formatProgressValue,
   formatReportDate
 } from "@/lib/reports";
@@ -39,14 +41,17 @@ export function ReportList({
               <p className="technical-caption">
                 {report.projectName} - {formatReportDate(report.date)}
               </p>
-              <h2 className="ledger-title">{report.summary}</h2>
+              <h2 className="ledger-title">{getReportHeadline(report)}</h2>
             </div>
             <span className="status-pill status-pill-live">
               ID-{report.id.slice(-6).toUpperCase()}
             </span>
           </div>
 
-          <p className="ledger-copy">{report.projectGoalSummary}</p>
+          <p className="ledger-copy">
+            {getReportSubline(report)} - {report.workItems.length} work item
+            {report.workItems.length === 1 ? "" : "s"}
+          </p>
 
           <div className="progress-card-grid">
             <div className="progress-stat">
@@ -76,7 +81,9 @@ export function ReportList({
           </div>
 
           <div className="ledger-footer">
-            <span className="activity-tag">Project Snapshot</span>
+            <span className="activity-tag">
+              {report.contractorsOnSiteCount} contractors logged
+            </span>
             <Link className="inline-link" href={`/reports/${report.id}`}>
               View Details
             </Link>

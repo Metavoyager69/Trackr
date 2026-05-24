@@ -27,3 +27,8 @@ export type Project = Prisma.ProjectModel
  * 
  */
 export type Report = Prisma.ReportModel
+/**
+ * Model ReportWorkItem
+ * 
+ */
+export type ReportWorkItem = Prisma.ReportWorkItemModel

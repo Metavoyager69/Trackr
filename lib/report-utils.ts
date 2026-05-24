@@ -1,4 +1,8 @@
-import type { CreateReportInput, Report } from "./report-types";
+import type {
+  CreateReportInput,
+  Report,
+  ReportWorkItem
+} from "./report-types";
 
 type ProjectShape = {
   id: string;
@@ -9,10 +13,20 @@ type ProjectShape = {
 type ReportShape = {
   id: string;
   date: Date;
-  summary: string;
+  summary: string | null;
+  workersOnSite: number;
   plannedProgressPct: number | null;
   actualProgressPct: number | null;
   completionPct: number | null;
+  workItems: ReportWorkItemShape[];
+};
+
+type ReportWorkItemShape = {
+  id: string;
+  contractor: string;
+  workDescription: string;
+  engineerName: string;
+  location: string;
 };
 
 type ReportWithProjectShape = ReportShape & {
@@ -45,7 +59,21 @@ export function calculateVariance(
   return actualProgressPct - plannedProgressPct;
 }
 
+export function serializeWorkItem(
+  workItem: ReportWorkItemShape
+): ReportWorkItem {
+  return {
+    id: workItem.id,
+    contractor: workItem.contractor,
+    workDescription: workItem.workDescription,
+    engineerName: workItem.engineerName,
+    location: workItem.location
+  };
+}
+
 export function serializeReport(report: ReportWithProjectShape): Report {
+  const workItems = report.workItems.map(serializeWorkItem);
+
   return {
     id: report.id,
     projectId: report.project.id,
@@ -53,6 +81,9 @@ export function serializeReport(report: ReportWithProjectShape): Report {
     projectGoalSummary: report.project.goalSummary,
     date: report.date.toISOString().slice(0, 10),
     summary: report.summary,
+    workersOnSite: report.workersOnSite,
+    contractorsOnSiteCount: countDistinctContractors(workItems),
+    workItems,
     plannedProgressPct: report.plannedProgressPct,
     actualProgressPct: report.actualProgressPct,
     completionPct: report.completionPct,
@@ -77,9 +108,44 @@ export function toReportCreateData(input: CreateReportInput) {
   return {
     projectId: input.projectId,
     date: new Date(`${input.date}T00:00:00.000Z`),
-    summary: input.summary.trim(),
+    summary: input.summary?.trim() ? input.summary.trim() : null,
+    workersOnSite: input.workersOnSite,
     plannedProgressPct: input.plannedProgressPct,
     actualProgressPct: input.actualProgressPct,
-    completionPct: input.completionPct
+    completionPct: input.completionPct,
+    workItems: {
+      create: input.workItems.map((workItem) => ({
+        contractor: workItem.contractor.trim(),
+        workDescription: workItem.workDescription.trim(),
+        engineerName: workItem.engineerName.trim(),
+        location: workItem.location.trim()
+      }))
+    }
   };
+}
+
+export function getReportHeadline(report: Pick<Report, "summary" | "workItems">) {
+  if (report.summary?.trim()) {
+    return report.summary.trim();
+  }
+
+  if (report.workItems.length === 1) {
+    return report.workItems[0].workDescription;
+  }
+
+  return `${report.workItems.length} work items logged`;
+}
+
+export function getReportSubline(
+  report: Pick<Report, "workersOnSite" | "contractorsOnSiteCount">
+) {
+  return `${report.workersOnSite} workers on site - ${report.contractorsOnSiteCount} contractors on site`;
+}
+
+function countDistinctContractors(workItems: ReportWorkItem[]) {
+  return new Set(
+    workItems
+      .map((workItem) => workItem.contractor.trim().toLowerCase())
+      .filter(Boolean)
+  ).size;
 }

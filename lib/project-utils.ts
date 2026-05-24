@@ -19,11 +19,19 @@ type ProjectShape = {
 type ReportShape = {
   id: string;
   date: Date;
-  summary: string;
+  summary: string | null;
+  workersOnSite: number;
   plannedProgressPct: number | null;
   actualProgressPct: number | null;
   completionPct: number | null;
   createdAt: Date;
+  workItems: Array<{
+    id: string;
+    contractor: string;
+    workDescription: string;
+    engineerName: string;
+    location: string;
+  }>;
 };
 
 type ProjectWithLatestReportShape = ProjectShape & {

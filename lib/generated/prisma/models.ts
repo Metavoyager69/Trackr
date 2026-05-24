@@ -10,4 +10,5 @@
  */
 export type * from './models/Project'
 export type * from './models/Report'
+export type * from './models/ReportWorkItem'
 export type * from './commonInputTypes'

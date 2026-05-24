@@ -12,7 +12,12 @@ export async function getReports() {
 
   const reports = await prisma.report.findMany({
     include: {
-      project: true
+      project: true,
+      workItems: {
+        orderBy: {
+          createdAt: "asc"
+        }
+      }
     },
     orderBy: [{ date: "desc" }, { createdAt: "desc" }]
   });
@@ -30,7 +35,12 @@ export async function getReportById(id: string) {
   const report = await prisma.report.findUnique({
     where: { id },
     include: {
-      project: true
+      project: true,
+      workItems: {
+        orderBy: {
+          createdAt: "asc"
+        }
+      }
     }
   });
 
@@ -47,7 +57,12 @@ export async function createReport(input: CreateReportInput) {
   const report = await prisma.report.create({
     data: toReportCreateData(input),
     include: {
-      project: true
+      project: true,
+      workItems: {
+        orderBy: {
+          createdAt: "asc"
+        }
+      }
     }
   });
 

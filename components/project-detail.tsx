@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ProjectDetail as ProjectDetailType } from "@/lib/projects";
 import {
+  getReportHeadline,
   formatProgressValue,
   formatReportDate
 } from "@/lib/reports";
@@ -139,7 +140,7 @@ export function ProjectDetail({
                     {formatProgressValue(report.completionPct)}
                   </span>
                 </div>
-                <h2 className="sidebar-title">{report.summary}</h2>
+                <h2 className="sidebar-title">{getReportHeadline(report)}</h2>
                 <p className="sidebar-copy">
                   Planned {formatProgressValue(report.plannedProgressPct)} - Actual{" "}
                   {formatProgressValue(report.actualProgressPct)} - Variance{" "}

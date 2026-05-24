@@ -1,8 +1,16 @@
-export type { CreateReportInput, ProgressSnapshot, Report } from "./report-types";
+export type {
+  CreateReportInput,
+  CreateReportWorkItemInput,
+  ProgressSnapshot,
+  Report,
+  ReportWorkItem
+} from "./report-types";
 
 export { createReport, getReportById, getReports } from "./report-data";
 export {
   calculateVariance,
+  getReportHeadline,
+  getReportSubline,
   formatProgressValue,
   formatReportDate
 } from "./report-utils";

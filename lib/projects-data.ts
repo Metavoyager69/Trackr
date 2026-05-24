@@ -18,7 +18,14 @@ export async function getProjects() {
     include: {
       reports: {
         take: 1,
-        orderBy: [{ date: "desc" }, { createdAt: "desc" }]
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        include: {
+          workItems: {
+            orderBy: {
+              createdAt: "asc"
+            }
+          }
+        }
       },
       _count: {
         select: {
@@ -62,7 +69,14 @@ export async function getProjectById(id: string) {
     where: { id },
     include: {
       reports: {
-        orderBy: [{ date: "desc" }, { createdAt: "desc" }]
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        include: {
+          workItems: {
+            orderBy: {
+              createdAt: "asc"
+            }
+          }
+        }
       }
     }
   });
@@ -81,7 +95,14 @@ export async function createProject(input: CreateProjectInput) {
     data: toProjectCreateData(input),
     include: {
       reports: {
-        orderBy: [{ date: "desc" }, { createdAt: "desc" }]
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        include: {
+          workItems: {
+            orderBy: {
+              createdAt: "asc"
+            }
+          }
+        }
       }
     }
   });

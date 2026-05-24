@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Project: 'Project',
-  Report: 'Report'
+  Report: 'Report',
+  ReportWorkItem: 'ReportWorkItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -87,6 +88,7 @@ export const ReportScalarFieldEnum = {
   projectId: 'projectId',
   date: 'date',
   summary: 'summary',
+  workersOnSite: 'workersOnSite',
   plannedProgressPct: 'plannedProgressPct',
   actualProgressPct: 'actualProgressPct',
   completionPct: 'completionPct',
@@ -95,6 +97,20 @@ export const ReportScalarFieldEnum = {
 } as const
 
 export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
+
+
+export const ReportWorkItemScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  contractor: 'contractor',
+  workDescription: 'workDescription',
+  engineerName: 'engineerName',
+  location: 'location',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReportWorkItemScalarFieldEnum = (typeof ReportWorkItemScalarFieldEnum)[keyof typeof ReportWorkItemScalarFieldEnum]
 
 
 export const SortOrder = {

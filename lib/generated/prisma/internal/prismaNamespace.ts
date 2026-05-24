@@ -385,7 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Project: 'Project',
-  Report: 'Report'
+  Report: 'Report',
+  ReportWorkItem: 'ReportWorkItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "project" | "report"
+    modelProps: "project" | "report" | "reportWorkItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +554,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReportWorkItem: {
+      payload: Prisma.$ReportWorkItemPayload<ExtArgs>
+      fields: Prisma.ReportWorkItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReportWorkItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReportWorkItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>
+        }
+        findFirst: {
+          args: Prisma.ReportWorkItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReportWorkItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>
+        }
+        findMany: {
+          args: Prisma.ReportWorkItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>[]
+        }
+        create: {
+          args: Prisma.ReportWorkItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>
+        }
+        createMany: {
+          args: Prisma.ReportWorkItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReportWorkItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>[]
+        }
+        delete: {
+          args: Prisma.ReportWorkItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>
+        }
+        update: {
+          args: Prisma.ReportWorkItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReportWorkItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReportWorkItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReportWorkItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReportWorkItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportWorkItemPayload>
+        }
+        aggregate: {
+          args: Prisma.ReportWorkItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReportWorkItem>
+        }
+        groupBy: {
+          args: Prisma.ReportWorkItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReportWorkItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReportWorkItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReportWorkItemCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -608,6 +683,7 @@ export const ReportScalarFieldEnum = {
   projectId: 'projectId',
   date: 'date',
   summary: 'summary',
+  workersOnSite: 'workersOnSite',
   plannedProgressPct: 'plannedProgressPct',
   actualProgressPct: 'actualProgressPct',
   completionPct: 'completionPct',
@@ -616,6 +692,20 @@ export const ReportScalarFieldEnum = {
 } as const
 
 export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
+
+
+export const ReportWorkItemScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  contractor: 'contractor',
+  workDescription: 'workDescription',
+  engineerName: 'engineerName',
+  location: 'location',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReportWorkItemScalarFieldEnum = (typeof ReportWorkItemScalarFieldEnum)[keyof typeof ReportWorkItemScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -800,6 +890,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   report?: Prisma.ReportOmit
+  reportWorkItem?: Prisma.ReportWorkItemOmit
 }
 
 /* Types for Logging */

@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { getProjects } from "@/lib/projects";
-import { getReports, formatProgressValue, isDatabaseConfigured } from "@/lib/reports";
+import {
+  getReports,
+  getReportHeadline,
+  formatProgressValue,
+  isDatabaseConfigured
+} from "@/lib/reports";
 
 export default async function HomePage() {
   const projects = await getProjects();
@@ -16,7 +21,7 @@ export default async function HomePage() {
       <header className="hero-grid">
         <div>
           <p className="section-label">Field Intelligence</p>
-          <h1 className="hero-title">Project Progress Grid</h1>
+          <h1 className="hero-title">Progress Grid</h1>
           <p className="hero-copy">
             Track each project against planned progress, actual progress, and
             final completion targets through dated daily reports.
@@ -142,7 +147,9 @@ export default async function HomePage() {
                     </span>
                   </div>
                   <h2 className="sidebar-title">{report.projectName}</h2>
-                  <p className="sidebar-copy">{truncate(report.summary, 88)}</p>
+                  <p className="sidebar-copy">
+                    {truncate(getReportHeadline(report), 88)}
+                  </p>
                 </Link>
               ))
             ) : (
