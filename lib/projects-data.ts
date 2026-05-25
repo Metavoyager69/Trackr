@@ -1,10 +1,11 @@
 import "server-only";
-import type { CreateProjectInput } from "./project-types";
+import type { CreateProjectInput, UpdateProjectInput } from "./project-types";
 import { getPrismaClient, isDatabaseConfigured } from "./prisma";
 import {
   serializeProjectDetail,
   serializeProjectSummary,
-  toProjectCreateData
+  toProjectCreateData,
+  toProjectUpdateData
 } from "./project-utils";
 
 export async function getProjects() {
@@ -108,6 +109,45 @@ export async function createProject(input: CreateProjectInput) {
   });
 
   return serializeProjectDetail(project);
+}
+
+export async function updateProject(id: string, input: UpdateProjectInput) {
+  const prisma = getPrismaClient();
+
+  if (!prisma || !isDatabaseConfigured()) {
+    throw new Error("DATABASE_URL is not configured.");
+  }
+
+  const project = await prisma.project.update({
+    where: { id },
+    data: toProjectUpdateData(input),
+    include: {
+      reports: {
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        include: {
+          workItems: {
+            orderBy: {
+              createdAt: "asc"
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return serializeProjectDetail(project);
+}
+
+export async function deleteProject(id: string) {
+  const prisma = getPrismaClient();
+
+  if (!prisma || !isDatabaseConfigured()) {
+    throw new Error("DATABASE_URL is not configured.");
+  }
+
+  await prisma.project.delete({
+    where: { id }
+  });
 }
 
 function compareProjectsByLatestActivity(

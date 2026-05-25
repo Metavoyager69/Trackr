@@ -42,3 +42,7 @@ export type CreateReportInput = {
   completionPct: number;
   workItems: CreateReportWorkItemInput[];
 };
+
+export type UpdateReportInput = Omit<Partial<CreateReportInput>, "summary"> & {
+  summary?: string | null;
+};

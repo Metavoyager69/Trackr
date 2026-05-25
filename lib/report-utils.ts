@@ -1,7 +1,8 @@
 import type {
   CreateReportInput,
   Report,
-  ReportWorkItem
+  ReportWorkItem,
+  UpdateReportInput
 } from "./report-types";
 
 type ProjectShape = {
@@ -122,6 +123,69 @@ export function toReportCreateData(input: CreateReportInput) {
       }))
     }
   };
+}
+
+export function toReportUpdateData(input: UpdateReportInput) {
+  const data: {
+    projectId?: string;
+    date?: Date;
+    summary?: string | null;
+    workersOnSite?: number;
+    plannedProgressPct?: number;
+    actualProgressPct?: number;
+    completionPct?: number;
+    workItems?: {
+      deleteMany: Record<string, never>;
+      create: Array<{
+        contractor: string;
+        workDescription: string;
+        engineerName: string;
+        location: string;
+      }>;
+    };
+  } = {};
+
+  if (input.projectId !== undefined) {
+    data.projectId = input.projectId;
+  }
+
+  if (input.date !== undefined) {
+    data.date = new Date(`${input.date}T00:00:00.000Z`);
+  }
+
+  if (input.summary !== undefined) {
+    data.summary = input.summary?.trim() ? input.summary.trim() : null;
+  }
+
+  if (input.workersOnSite !== undefined) {
+    data.workersOnSite = input.workersOnSite;
+  }
+
+  if (input.plannedProgressPct !== undefined) {
+    data.plannedProgressPct = input.plannedProgressPct;
+  }
+
+  if (input.actualProgressPct !== undefined) {
+    data.actualProgressPct = input.actualProgressPct;
+  }
+
+  if (input.completionPct !== undefined) {
+    data.completionPct = input.completionPct;
+  }
+
+  if (input.workItems !== undefined) {
+    data.workItems = {
+      deleteMany: {},
+      create: input.workItems.map((workItem) => ({
+        contractor: workItem.contractor.trim(),
+        workDescription: workItem.workDescription.trim(),
+        engineerName: workItem.engineerName.trim(),
+        location: workItem.location.trim()
+      }))
+    };
+  }
+
+  return data;
 }
 
 export function getReportHeadline(report: Pick<Report, "summary" | "workItems">) {

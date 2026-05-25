@@ -29,3 +29,5 @@ export type CreateProjectInput = {
   name: string;
   goalSummary: string;
 };
+
+export type UpdateProjectInput = Partial<CreateProjectInput>;

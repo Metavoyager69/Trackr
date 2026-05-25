@@ -1,7 +1,8 @@
 import type {
   CreateProjectInput,
   ProjectDetail,
-  ProjectSummary
+  ProjectSummary,
+  UpdateProjectInput
 } from "./project-types";
 import {
   calculateVariance,
@@ -101,4 +102,21 @@ export function toProjectCreateData(input: CreateProjectInput) {
     name: input.name.trim(),
     goalSummary: input.goalSummary.trim()
   };
+}
+
+export function toProjectUpdateData(input: UpdateProjectInput) {
+  const data: {
+    name?: string;
+    goalSummary?: string;
+  } = {};
+
+  if (input.name !== undefined) {
+    data.name = input.name.trim();
+  }
+
+  if (input.goalSummary !== undefined) {
+    data.goalSummary = input.goalSummary.trim();
+  }
+
+  return data;
 }

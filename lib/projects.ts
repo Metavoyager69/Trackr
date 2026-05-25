@@ -3,13 +3,16 @@ export type {
   Project,
   ProjectDetail,
   ProjectOption,
-  ProjectSummary
+  ProjectSummary,
+  UpdateProjectInput
 } from "./project-types";
 
 export {
   createProject,
+  deleteProject,
   getProjectById,
   getProjectOptions,
-  getProjects
+  getProjects,
+  updateProject
 } from "./projects-data";
 export { isDatabaseConfigured } from "./prisma";
