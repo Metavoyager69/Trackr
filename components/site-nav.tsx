@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOutAction } from "@/app/sign-out/actions";
 
 const navItems = [
   {
@@ -18,7 +19,11 @@ const navItems = [
   }
 ];
 
-export function SiteNav() {
+type SiteNavProps = {
+  signedIn: boolean;
+};
+
+export function SiteNav({ signedIn }: SiteNavProps) {
   const pathname = usePathname();
 
   return (
@@ -50,6 +55,17 @@ export function SiteNav() {
         <Link className="nav-button nav-button-primary" href="/reports/create">
           New Report
         </Link>
+        {signedIn ? (
+          <form action={signOutAction}>
+            <button className="nav-button nav-button-secondary" type="submit">
+              Sign Out
+            </button>
+          </form>
+        ) : (
+          <Link className="nav-button nav-button-secondary" href="/sign-in">
+            Sign In
+          </Link>
+        )}
       </div>
     </nav>
   );
