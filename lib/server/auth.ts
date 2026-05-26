@@ -7,6 +7,17 @@ export function authorizeApiRequest(request: Request, scope: ApiScope) {
   const readToken = process.env.TRACKR_API_READ_TOKEN?.trim() ?? "";
   const writeToken = process.env.TRACKR_API_WRITE_TOKEN?.trim() ?? "";
 
+  const placeholders = new Set([
+    "replace-with-read-token",
+    "replace-with-write-token"
+  ]);
+
+  if (placeholders.has(readToken) || placeholders.has(writeToken)) {
+    throw new AppConfigurationError(
+      "Operator configuration required: replace placeholder API tokens in .env with secure random strings."
+    );
+  }
+
   if (scope === "write" && !writeToken) {
     throw new AppConfigurationError(
       "Configure TRACKR_API_WRITE_TOKEN before exposing write API routes."
