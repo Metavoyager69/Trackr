@@ -107,6 +107,15 @@ const demoProjects = [
 ];
 
 async function main() {
+  const defaultOrg = await prisma.organization.upsert({
+    where: { id: "seed-org-1" },
+    update: {},
+    create: {
+      id: "seed-org-1",
+      name: "Demo Organization"
+    }
+  });
+
   for (const demoProject of demoProjects) {
     const project = await prisma.project.upsert({
       where: {
@@ -116,14 +125,16 @@ async function main() {
         projectType: demoProject.projectType,
         location: demoProject.location,
         plannedDurationDays: demoProject.plannedDurationDays,
-        goalSummary: demoProject.goalSummary
+        goalSummary: demoProject.goalSummary,
+        organizationId: defaultOrg.id
       },
       create: {
         name: demoProject.name,
         projectType: demoProject.projectType,
         location: demoProject.location,
         plannedDurationDays: demoProject.plannedDurationDays,
-        goalSummary: demoProject.goalSummary
+        goalSummary: demoProject.goalSummary,
+        organizationId: defaultOrg.id
       }
     });
 
