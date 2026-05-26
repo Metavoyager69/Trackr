@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { ReportList } from "@/components/report-list";
-import { getReports, isDatabaseConfigured } from "@/lib/reports";
+import { getReports } from "@/lib/reports";
+import { isDatabaseConfigured } from "@/lib/prisma";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Reports | SiteLog",
+  description: "Browse and review all daily site reports"
+};
 
 export default async function ReportsPage() {
   const reports = await getReports();

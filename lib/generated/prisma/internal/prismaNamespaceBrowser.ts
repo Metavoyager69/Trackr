@@ -55,7 +55,6 @@ export const ModelName = {
   User: 'User',
   Membership: 'Membership',
   Invitation: 'Invitation',
-  ActivityLog: 'ActivityLog',
   Project: 'Project',
   Report: 'Report',
   ReportWorkItem: 'ReportWorkItem'
@@ -124,19 +123,6 @@ export const InvitationScalarFieldEnum = {
 } as const
 
 export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
-
-
-export const ActivityLogScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  userName: 'userName',
-  action: 'action',
-  details: 'details',
-  createdAt: 'createdAt'
-} as const
-
-export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
 
 
 export const ProjectScalarFieldEnum = {

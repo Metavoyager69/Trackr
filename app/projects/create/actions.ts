@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getErrorMessage } from "@/lib/server/errors";
 import { createProjectRecord } from "@/lib/server/projects-service";
 import { requireCurrentUser } from "@/lib/server/access-control";
+import { getFormValue, parseWholeNumber } from "@/lib/form-utils";
 import type { CreateProjectFormState } from "./form-state";
 
 export async function createProjectAction(
@@ -37,17 +38,4 @@ export async function createProjectAction(
   redirect(`/projects/${projectId}`);
 }
 
-function getFormValue(formData: FormData, key: string) {
-  const value = formData.get(key);
-  return typeof value === "string" ? value.trim() : "";
-}
 
-function parseWholeNumber(formData: FormData, key: string) {
-  const value = getFormValue(formData, key);
-
-  if (!/^\d+$/.test(value)) {
-    return Number.NaN;
-  }
-
-  return Number.parseInt(value, 10);
-}

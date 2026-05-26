@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ProjectSummary } from "@/lib/projects";
 import { formatProgressValue, formatReportDate } from "@/lib/reports";
+import { formatPlannedDuration } from "@/lib/format-utils";
 
 type ProjectListProps = {
   databaseConfigured: boolean;
@@ -92,8 +93,4 @@ export function ProjectList({
   );
 }
 
-function formatPlannedDuration(plannedDurationDays: number | null) {
-  return plannedDurationDays === null
-    ? "Duration not set"
-    : `${plannedDurationDays} planned days`;
-}
+

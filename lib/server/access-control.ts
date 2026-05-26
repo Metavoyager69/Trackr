@@ -2,6 +2,8 @@ import "server-only";
 import { getPrismaClient } from "@/lib/prisma";
 import { getSessionCookiePayload } from "./session";
 import { AppAuthError, AppConfigurationError } from "./errors";
+import { MemberRole } from "@/lib/generated/prisma/client";
+import { getApiContext } from "./api-context";
 
 export type CurrentUserContext = {
   id: string;
@@ -9,12 +11,14 @@ export type CurrentUserContext = {
   fullName: string;
   organizationId: string;
   organizationName: string;
-  role: string; // "ADMIN" | "VIEWER"
+  role: MemberRole;
 };
 
 export async function getCurrentUser(): Promise<CurrentUserContext | null> {
   const payload = await getSessionCookiePayload();
-  if (!payload) return null;
+  if (!payload) {
+    return getApiContext();
+  }
 
   const prisma = getPrismaClient();
   if (!prisma) return null;
@@ -54,13 +58,13 @@ export async function requireCurrentUser(): Promise<CurrentUserContext> {
 }
 
 export function assertIsAdmin(user: CurrentUserContext) {
-  if (user.role !== "ADMIN") {
+  if (user.role !== MemberRole.ADMIN) {
     throw new AppAuthError("You do not have permission to perform this action.", 403);
   }
 }
 
 export function scopeQueryByOrganization(user: CurrentUserContext) {
-  if (user.role === "ADMIN") {
+  if (user.role === MemberRole.ADMIN) {
     return {
       organizationId: user.organizationId
     };

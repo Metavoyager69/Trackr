@@ -206,7 +206,7 @@ function normalizeServiceError(error: unknown, fallbackMessage: string) {
   }
 
   return mapDatabaseError(error, {
-    conflict: "A project with this name already exists.",
+    conflict: "A project with this name already exists in your organization.",
     notFound: "Project not found."
   });
 }

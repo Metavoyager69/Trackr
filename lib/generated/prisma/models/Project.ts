@@ -308,11 +308,12 @@ export type ProjectOrderByWithRelationInput = {
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: string
+  organizationId_name?: Prisma.ProjectOrganizationIdNameCompoundUniqueInput
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   organizationId?: Prisma.StringFilter<"Project"> | string
+  name?: Prisma.StringFilter<"Project"> | string
   projectType?: Prisma.StringNullableFilter<"Project"> | string | null
   location?: Prisma.StringNullableFilter<"Project"> | string | null
   plannedDurationDays?: Prisma.IntNullableFilter<"Project"> | number | null
@@ -327,7 +328,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   reports?: Prisma.ReportListRelationFilter
   viewers?: Prisma.UserListRelationFilter
   invitations?: Prisma.InvitationListRelationFilter
-}, "id" | "name">
+}, "id" | "organizationId_name">
 
 export type ProjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -505,6 +506,11 @@ export type ProjectOrderByRelationAggregateInput = {
 export type ProjectNullableScalarRelationFilter = {
   is?: Prisma.ProjectWhereInput | null
   isNot?: Prisma.ProjectWhereInput | null
+}
+
+export type ProjectOrganizationIdNameCompoundUniqueInput = {
+  organizationId: string
+  name: string
 }
 
 export type ProjectCountOrderByAggregateInput = {

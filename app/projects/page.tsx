@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { ProjectList } from "@/components/project-list";
-import { getProjects, isDatabaseConfigured } from "@/lib/projects";
+import { getProjects } from "@/lib/projects";
+import { isDatabaseConfigured } from "@/lib/prisma";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects | SiteLog",
+  description: "Monitor all active projects and progress metrics"
+};
 
 export default async function ProjectsPage() {
   const projects = await getProjects();

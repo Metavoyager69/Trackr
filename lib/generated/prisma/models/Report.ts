@@ -289,6 +289,7 @@ export type ReportOrderByWithRelationInput = {
 
 export type ReportWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  projectId_date?: Prisma.ReportProjectIdDateCompoundUniqueInput
   AND?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
   OR?: Prisma.ReportWhereInput[]
   NOT?: Prisma.ReportWhereInput | Prisma.ReportWhereInput[]
@@ -303,7 +304,7 @@ export type ReportWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Report"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   workItems?: Prisma.ReportWorkItemListRelationFilter
-}, "id">
+}, "id" | "projectId_date">
 
 export type ReportOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -441,6 +442,11 @@ export type ReportListRelationFilter = {
 
 export type ReportOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ReportProjectIdDateCompoundUniqueInput = {
+  projectId: string
+  date: Date | string
 }
 
 export type ReportCountOrderByAggregateInput = {

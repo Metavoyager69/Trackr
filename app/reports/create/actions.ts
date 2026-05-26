@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getErrorMessage } from "@/lib/server/errors";
 import { createReportRecord } from "@/lib/server/reports-service";
 import { requireCurrentUser } from "@/lib/server/access-control";
+import { getFormValue, parseWholeNumber } from "@/lib/form-utils";
 import type { CreateReportFormState } from "./form-state";
 
 export async function createReportAction(
@@ -42,20 +43,7 @@ export async function createReportAction(
   redirect(`/reports/${reportId}`);
 }
 
-function getFormValue(formData: FormData, key: string) {
-  const value = formData.get(key);
-  return typeof value === "string" ? value.trim() : "";
-}
 
-function parseWholeNumber(formData: FormData, key: string) {
-  const value = getFormValue(formData, key);
-
-  if (!/^\d+$/.test(value)) {
-    return Number.NaN;
-  }
-
-  return Number.parseInt(value, 10);
-}
 
 function parseWorkItems(formData: FormData) {
   const rawValue = getFormValue(formData, "workItemsJson");

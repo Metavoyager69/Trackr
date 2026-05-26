@@ -62,11 +62,6 @@ export type Membership = Prisma.MembershipModel
  */
 export type Invitation = Prisma.InvitationModel
 /**
- * Model ActivityLog
- * 
- */
-export type ActivityLog = Prisma.ActivityLogModel
-/**
  * Model Project
  * 
  */

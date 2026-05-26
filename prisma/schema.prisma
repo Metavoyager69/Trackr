@@ -7,27 +7,30 @@ datasource db {
   provider = "postgresql"
 }
 
+enum MemberRole {
+  ADMIN
+  VIEWER
+}
+
 model Organization {
-  id           String        @id @default(cuid())
-  name         String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  memberships  Membership[]
-  projects     Project[]
-  invitations  Invitation[]
-  activityLogs ActivityLog[]
+  id          String       @id @default(cuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  memberships Membership[]
+  projects    Project[]
+  invitations Invitation[]
 }
 
 model User {
-  id               String        @id @default(cuid())
-  email            String        @unique
+  id               String            @id @default(cuid())
+  email            String            @unique
   passwordHash     String
   fullName         String
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   memberships      Membership[]
-  activityLogs     ActivityLog[]
-  viewableProjects Project[]     @relation("ProjectViewers")
+  viewableProjects Project[]         @relation("ProjectViewers")
 }
 
 model Membership {
@@ -36,7 +39,7 @@ model Membership {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   userId         String
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role           String       // "ADMIN" or "VIEWER"
+  role           MemberRole
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
@@ -48,7 +51,7 @@ model Invitation {
   email          String
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  role           String       // "ADMIN" or "VIEWER"
+  role           MemberRole
   projectId      String?
   project        Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
   token          String       @unique
@@ -57,23 +60,11 @@ model Invitation {
   updatedAt      DateTime     @updatedAt
 }
 
-model ActivityLog {
-  id             String       @id @default(cuid())
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String?
-  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userName       String
-  action         String
-  details        String?
-  createdAt      DateTime     @default(now())
-}
-
 model Project {
   id                    String   @id @default(cuid())
   organizationId        String
   organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  name                  String   @unique
+  name                  String
   projectType           String?
   location              String?
   plannedDurationDays   Int?
@@ -87,6 +78,8 @@ model Project {
   reports               Report[]
   viewers               User[]       @relation("ProjectViewers")
   invitations           Invitation[]
+
+  @@unique([organizationId, name])
 }
 
 model Report {
@@ -104,7 +97,7 @@ model Report {
   workItems          ReportWorkItem[]
 
   @@index([date])
-  @@index([projectId, date])
+  @@unique([projectId, date])
 }
 
 model ReportWorkItem {

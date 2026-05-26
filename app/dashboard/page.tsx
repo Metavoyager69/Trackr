@@ -3,11 +3,12 @@ import { getProjects } from "@/lib/projects";
 import {
   getReports,
   getReportHeadline,
-  formatProgressValue,
-  isDatabaseConfigured
+  formatProgressValue
 } from "@/lib/reports";
+import { isDatabaseConfigured } from "@/lib/prisma";
 import { requireCurrentUser } from "@/lib/server/access-control";
-import { getPrismaClient } from "@/lib/prisma";
+import { listMembers, listPendingInvitations } from "@/lib/server/members-service";
+import { CopyButton } from "@/components/copy-button";
 
 export default async function HomePage() {
   const user = await requireCurrentUser();
@@ -19,19 +20,8 @@ export default async function HomePage() {
   const latestReport = reports[0] ?? null;
   const averageCompletion = getAverageCompletion(projects);
 
-  const prisma = getPrismaClient();
-  let members: any[] = [];
-  let invites: any[] = [];
-  
-  if (prisma) {
-    members = await prisma.membership.findMany({
-      where: { organizationId: user.organizationId },
-      include: { user: true }
-    });
-    invites = await prisma.invitation.findMany({
-      where: { organizationId: user.organizationId, accepted: false }
-    });
-  }
+  const members = await listMembers();
+  const invites = await listPendingInvitations();
 
   return (
     <section className="dashboard-stack">
@@ -165,7 +155,10 @@ export default async function HomePage() {
                       <span className="status-pill status-pill-muted">{inv.role}</span>
                     </div>
                     <p className="sidebar-copy">{inv.email}</p>
-                    <p className="sidebar-copy text-xs mt-1 font-mono">{inv.token}</p>
+                    <p className="sidebar-copy text-xs mt-1 font-mono">
+                      {inv.token.slice(0, 6)}...{inv.token.slice(-4)}
+                      <CopyButton text={inv.token} />
+                    </p>
                   </div>
                 ))}
               </div>

@@ -1,6 +1,12 @@
 import { getProjectOptions } from "@/lib/projects";
-import { isDatabaseConfigured } from "@/lib/reports";
+import { isDatabaseConfigured } from "@/lib/prisma";
 import { ReportForm } from "@/components/report-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Report | SiteLog",
+  description: "Create a new daily report and log site progress"
+};
 
 export default async function CreateReportPage() {
   const databaseConfigured = isDatabaseConfigured();

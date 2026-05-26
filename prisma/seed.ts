@@ -1,5 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../lib/generated/prisma/client";
+import { PrismaClient, MemberRole } from "../lib/generated/prisma/client";
+import { hashPassword } from "../lib/server/password";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is required to run the seed script.");
@@ -116,10 +117,44 @@ async function main() {
     }
   });
 
+  const passwordHash = await hashPassword("password123");
+  const defaultUser = await prisma.user.upsert({
+    where: { email: "demo@sitelog.dev" },
+    update: {
+      passwordHash,
+      fullName: "Demo Admin User"
+    },
+    create: {
+      email: "demo@sitelog.dev",
+      passwordHash,
+      fullName: "Demo Admin User"
+    }
+  });
+
+  await prisma.membership.upsert({
+    where: {
+      organizationId_userId: {
+        organizationId: defaultOrg.id,
+        userId: defaultUser.id
+      }
+    },
+    update: {
+      role: MemberRole.ADMIN
+    },
+    create: {
+      organizationId: defaultOrg.id,
+      userId: defaultUser.id,
+      role: MemberRole.ADMIN
+    }
+  });
+
   for (const demoProject of demoProjects) {
     const project = await prisma.project.upsert({
       where: {
-        name: demoProject.name
+        organizationId_name: {
+          organizationId: defaultOrg.id,
+          name: demoProject.name
+        }
       },
       update: {
         projectType: demoProject.projectType,
@@ -167,7 +202,11 @@ async function main() {
       timestamp: new Date().toISOString(),
       level: "INFO",
       event: "seed.completed",
-      projectCount: demoProjects.length
+      projectCount: demoProjects.length,
+      demoCredentials: {
+        email: "demo@sitelog.dev",
+        password: "password123"
+      }
     })
   );
 }

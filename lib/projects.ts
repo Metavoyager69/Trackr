@@ -17,4 +17,3 @@ export {
   updateProject,
   updateProjectPlan
 } from "./projects-data";
-export { isDatabaseConfigured } from "./prisma";

@@ -21,4 +21,3 @@ export {
   formatProgressValue,
   formatReportDate
 } from "./report-utils";
-export { isDatabaseConfigured } from "./prisma";

@@ -1,5 +1,11 @@
 import { ProjectForm } from "@/components/project-form";
-import { isDatabaseConfigured } from "@/lib/projects";
+import { isDatabaseConfigured } from "@/lib/prisma";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Project | SiteLog",
+  description: "Create a new project record and configure baselines"
+};
 
 export default function CreateProjectPage() {
   const databaseConfigured = isDatabaseConfigured();

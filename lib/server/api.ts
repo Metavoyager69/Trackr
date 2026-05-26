@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { authorizeApiRequest, type ApiScope } from "./auth";
 import { getErrorMessage, getErrorStatus } from "./errors";
 import { logError, logInfo } from "./logger";
+import { apiContextStorage } from "./api-context";
+import { MemberRole } from "@/lib/generated/prisma/client";
 
 type ApiHandlerOptions = {
   request: Request;
@@ -28,7 +30,18 @@ export async function executeApiHandler({
 
   try {
     authorizeApiRequest(request, scope);
-    const response = await handler({ requestId });
+
+    const orgId = process.env.SITELOG_API_ORG_ID || "seed-org-1";
+    const apiUserContext = {
+      id: "api-system-user",
+      email: "api@sitelog.internal",
+      fullName: "API System User",
+      organizationId: orgId,
+      organizationName: "API Organization",
+      role: MemberRole.ADMIN
+    };
+
+    const response = await apiContextStorage.run(apiUserContext, () => handler({ requestId }));
 
     response.headers.set("x-request-id", requestId);
 

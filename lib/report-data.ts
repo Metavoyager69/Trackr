@@ -1,6 +1,6 @@
 import "server-only";
 import type { CreateReportInput, UpdateReportInput } from "./report-types";
-import { getPrismaClient, isDatabaseConfigured } from "./prisma";
+import { getPrismaClient } from "./prisma";
 import { logError } from "./server/logger";
 import {
   serializeReport,
@@ -78,7 +78,7 @@ export async function createReport(input: CreateReportInput) {
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 
@@ -103,7 +103,7 @@ export async function updateReport(id: string, input: UpdateReportInput) {
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 
@@ -129,7 +129,7 @@ export async function deleteReport(id: string) {
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 

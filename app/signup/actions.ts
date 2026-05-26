@@ -1,9 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { getPrismaClient } from "@/lib/prisma";
 import { hashPassword } from "@/lib/server/password";
 import { createSessionCookie } from "@/lib/server/session";
+import { MemberRole } from "@/lib/generated/prisma/client";
+import { checkRateLimit, recordFailedAttempt } from "@/lib/server/rate-limit";
 
 export type SignupFormState = { error?: string };
 
@@ -25,7 +28,18 @@ export async function signupAction(
     return { error: "Organization name is required when creating a new workspace." };
   }
 
+  const clientHeaders = await headers();
+  const ip = clientHeaders.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
+  const rateLimitKey = `signup:${ip}`;
+  const limitCheck = checkRateLimit(rateLimitKey);
+  if (!limitCheck.allowed) {
+    return {
+      error: `Too many signup attempts. Please try again in ${limitCheck.retryAfterSeconds} seconds.`
+    };
+  }
+
   if (password.length < 8) {
+    recordFailedAttempt(rateLimitKey);
     return { error: "Password must be at least 8 characters." };
   }
 
@@ -37,10 +51,11 @@ export async function signupAction(
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
+      recordFailedAttempt(rateLimitKey);
       return { error: "Email is already registered." };
     }
 
-    const passwordHash = hashPassword(password);
+    const passwordHash = await hashPassword(password);
     let userId: string;
 
     if (inviteToken) {
@@ -94,7 +109,7 @@ export async function signupAction(
             memberships: {
               create: {
                 organizationId: org.id,
-                role: "ADMIN"
+                role: MemberRole.ADMIN
               }
             }
           }
@@ -106,6 +121,7 @@ export async function signupAction(
 
     await createSessionCookie(userId);
   } catch (error) {
+    recordFailedAttempt(rateLimitKey);
     return { error: "An error occurred during registration." };
   }
   

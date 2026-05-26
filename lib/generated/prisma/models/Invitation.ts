@@ -28,7 +28,7 @@ export type InvitationMinAggregateOutputType = {
   id: string | null
   email: string | null
   organizationId: string | null
-  role: string | null
+  role: $Enums.MemberRole | null
   projectId: string | null
   token: string | null
   accepted: boolean | null
@@ -40,7 +40,7 @@ export type InvitationMaxAggregateOutputType = {
   id: string | null
   email: string | null
   organizationId: string | null
-  role: string | null
+  role: $Enums.MemberRole | null
   projectId: string | null
   token: string | null
   accepted: boolean | null
@@ -175,7 +175,7 @@ export type InvitationGroupByOutputType = {
   id: string
   email: string
   organizationId: string
-  role: string
+  role: $Enums.MemberRole
   projectId: string | null
   token: string
   accepted: boolean
@@ -208,7 +208,7 @@ export type InvitationWhereInput = {
   id?: Prisma.StringFilter<"Invitation"> | string
   email?: Prisma.StringFilter<"Invitation"> | string
   organizationId?: Prisma.StringFilter<"Invitation"> | string
-  role?: Prisma.StringFilter<"Invitation"> | string
+  role?: Prisma.EnumMemberRoleFilter<"Invitation"> | $Enums.MemberRole
   projectId?: Prisma.StringNullableFilter<"Invitation"> | string | null
   token?: Prisma.StringFilter<"Invitation"> | string
   accepted?: Prisma.BoolFilter<"Invitation"> | boolean
@@ -240,7 +240,7 @@ export type InvitationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.InvitationWhereInput | Prisma.InvitationWhereInput[]
   email?: Prisma.StringFilter<"Invitation"> | string
   organizationId?: Prisma.StringFilter<"Invitation"> | string
-  role?: Prisma.StringFilter<"Invitation"> | string
+  role?: Prisma.EnumMemberRoleFilter<"Invitation"> | $Enums.MemberRole
   projectId?: Prisma.StringNullableFilter<"Invitation"> | string | null
   accepted?: Prisma.BoolFilter<"Invitation"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
@@ -271,7 +271,7 @@ export type InvitationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
   email?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
-  role?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
+  role?: Prisma.EnumMemberRoleWithAggregatesFilter<"Invitation"> | $Enums.MemberRole
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   token?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
   accepted?: Prisma.BoolWithAggregatesFilter<"Invitation"> | boolean
@@ -282,7 +282,7 @@ export type InvitationScalarWhereWithAggregatesInput = {
 export type InvitationCreateInput = {
   id?: string
   email: string
-  role: string
+  role: $Enums.MemberRole
   token: string
   accepted?: boolean
   createdAt?: Date | string
@@ -295,7 +295,7 @@ export type InvitationUncheckedCreateInput = {
   id?: string
   email: string
   organizationId: string
-  role: string
+  role: $Enums.MemberRole
   projectId?: string | null
   token: string
   accepted?: boolean
@@ -306,7 +306,7 @@ export type InvitationUncheckedCreateInput = {
 export type InvitationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -319,7 +319,7 @@ export type InvitationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -331,7 +331,7 @@ export type InvitationCreateManyInput = {
   id?: string
   email: string
   organizationId: string
-  role: string
+  role: $Enums.MemberRole
   projectId?: string | null
   token: string
   accepted?: boolean
@@ -342,7 +342,7 @@ export type InvitationCreateManyInput = {
 export type InvitationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -353,7 +353,7 @@ export type InvitationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -502,7 +502,7 @@ export type InvitationUncheckedUpdateManyWithoutProjectNestedInput = {
 export type InvitationCreateWithoutOrganizationInput = {
   id?: string
   email: string
-  role: string
+  role: $Enums.MemberRole
   token: string
   accepted?: boolean
   createdAt?: Date | string
@@ -513,7 +513,7 @@ export type InvitationCreateWithoutOrganizationInput = {
 export type InvitationUncheckedCreateWithoutOrganizationInput = {
   id?: string
   email: string
-  role: string
+  role: $Enums.MemberRole
   projectId?: string | null
   token: string
   accepted?: boolean
@@ -554,7 +554,7 @@ export type InvitationScalarWhereInput = {
   id?: Prisma.StringFilter<"Invitation"> | string
   email?: Prisma.StringFilter<"Invitation"> | string
   organizationId?: Prisma.StringFilter<"Invitation"> | string
-  role?: Prisma.StringFilter<"Invitation"> | string
+  role?: Prisma.EnumMemberRoleFilter<"Invitation"> | $Enums.MemberRole
   projectId?: Prisma.StringNullableFilter<"Invitation"> | string | null
   token?: Prisma.StringFilter<"Invitation"> | string
   accepted?: Prisma.BoolFilter<"Invitation"> | boolean
@@ -565,7 +565,7 @@ export type InvitationScalarWhereInput = {
 export type InvitationCreateWithoutProjectInput = {
   id?: string
   email: string
-  role: string
+  role: $Enums.MemberRole
   token: string
   accepted?: boolean
   createdAt?: Date | string
@@ -577,7 +577,7 @@ export type InvitationUncheckedCreateWithoutProjectInput = {
   id?: string
   email: string
   organizationId: string
-  role: string
+  role: $Enums.MemberRole
   token: string
   accepted?: boolean
   createdAt?: Date | string
@@ -613,7 +613,7 @@ export type InvitationUpdateManyWithWhereWithoutProjectInput = {
 export type InvitationCreateManyOrganizationInput = {
   id?: string
   email: string
-  role: string
+  role: $Enums.MemberRole
   projectId?: string | null
   token: string
   accepted?: boolean
@@ -624,7 +624,7 @@ export type InvitationCreateManyOrganizationInput = {
 export type InvitationUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -635,7 +635,7 @@ export type InvitationUpdateWithoutOrganizationInput = {
 export type InvitationUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -646,7 +646,7 @@ export type InvitationUncheckedUpdateWithoutOrganizationInput = {
 export type InvitationUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -658,7 +658,7 @@ export type InvitationCreateManyProjectInput = {
   id?: string
   email: string
   organizationId: string
-  role: string
+  role: $Enums.MemberRole
   token: string
   accepted?: boolean
   createdAt?: Date | string
@@ -668,7 +668,7 @@ export type InvitationCreateManyProjectInput = {
 export type InvitationUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -680,7 +680,7 @@ export type InvitationUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -691,7 +691,7 @@ export type InvitationUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   token?: Prisma.StringFieldUpdateOperationsInput | string
   accepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -778,7 +778,7 @@ export type $InvitationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: string
     email: string
     organizationId: string
-    role: string
+    role: $Enums.MemberRole
     projectId: string | null
     token: string
     accepted: boolean
@@ -1212,7 +1212,7 @@ export interface InvitationFieldRefs {
   readonly id: Prisma.FieldRef<"Invitation", 'String'>
   readonly email: Prisma.FieldRef<"Invitation", 'String'>
   readonly organizationId: Prisma.FieldRef<"Invitation", 'String'>
-  readonly role: Prisma.FieldRef<"Invitation", 'String'>
+  readonly role: Prisma.FieldRef<"Invitation", 'MemberRole'>
   readonly projectId: Prisma.FieldRef<"Invitation", 'String'>
   readonly token: Prisma.FieldRef<"Invitation", 'String'>
   readonly accepted: Prisma.FieldRef<"Invitation", 'Boolean'>

@@ -23,7 +23,19 @@ export async function getProjects() {
   try {
     const projects = await prisma.project.findMany({
       where: scopedWhere,
-      include: {
+      select: {
+        id: true,
+        organizationId: true,
+        name: true,
+        projectType: true,
+        location: true,
+        plannedDurationDays: true,
+        goalSummary: true,
+        projectPlanFileName: true,
+        projectPlanMimeType: true,
+        projectPlanUploadedAt: true,
+        createdAt: true,
+        updatedAt: true,
         reports: {
           take: 1,
           orderBy: [{ date: "desc" }, { createdAt: "desc" }],
@@ -119,7 +131,7 @@ export async function createProject(input: CreateProjectInput) {
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 
@@ -151,7 +163,7 @@ export async function updateProject(id: string, input: UpdateProjectInput) {
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 
@@ -188,7 +200,7 @@ export async function updateProjectPlan(
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 
@@ -251,7 +263,7 @@ export async function deleteProject(id: string) {
 
   const prisma = getPrismaClient();
 
-  if (!prisma || !isDatabaseConfigured()) {
+  if (!prisma) {
     throw new Error("DATABASE_URL is not configured.");
   }
 

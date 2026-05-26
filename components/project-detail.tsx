@@ -6,6 +6,7 @@ import {
   formatProgressValue,
   formatReportDate
 } from "@/lib/reports";
+import { formatPlannedDuration } from "@/lib/format-utils";
 
 type ProjectDetailProps = {
   databaseConfigured: boolean;
@@ -253,8 +254,4 @@ export function ProjectDetail({
   );
 }
 
-function formatPlannedDuration(plannedDurationDays: number | null) {
-  return plannedDurationDays === null
-    ? "Duration not set"
-    : `${plannedDurationDays} planned days`;
-}
+
