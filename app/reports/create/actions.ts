@@ -51,7 +51,7 @@ function parseWholeNumber(formData: FormData, key: string) {
   const value = getFormValue(formData, key);
 
   if (!/^\d+$/.test(value)) {
-    return null;
+    return Number.NaN;
   }
 
   return Number.parseInt(value, 10);
