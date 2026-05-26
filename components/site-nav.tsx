@@ -30,7 +30,7 @@ export function SiteNav({ user }: SiteNavProps) {
     <nav className="top-nav">
       <div className="nav-cluster">
         <Link className="brand-mark" href="/">
-          {user ? user.organizationName : "Trackr"}
+          {user ? user.organizationName : "SiteLog"}
         </Link>
 
         {user && (

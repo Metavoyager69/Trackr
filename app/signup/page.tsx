@@ -3,7 +3,7 @@ import { SignupForm } from "./signup-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Workspace | Trackr",
+  title: "Create Workspace | SiteLog",
   description: "Create a new workspace for your organization"
 };
 

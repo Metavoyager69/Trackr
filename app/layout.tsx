@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/server/access-control";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Trackr",
+  title: "SiteLog",
   description: "Industrial-style construction reporting dashboard."
 };
 
