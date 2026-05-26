@@ -62,14 +62,17 @@ export async function updateReportRecord(id: string, input: unknown) {
         ? parsedInput.actualProgressPct
         : existing.actualProgressPct;
 
-    if (
-      finalCompletion !== null &&
-      finalActual !== null &&
-      finalCompletion < finalActual
-    ) {
-      throw new AppValidationError(
-        "Overall completion cannot be less than the actual progress reported."
-      );
+    if (finalCompletion !== null && finalActual !== null) {
+      if (finalCompletion === 100 && finalActual < 100) {
+        throw new AppValidationError(
+          "Overall completion cannot be 100% if actual progress is less than 100%."
+        );
+      }
+      if (finalActual === 100 && finalCompletion === 0) {
+        throw new AppValidationError(
+          "Overall completion must be greater than 0% if actual progress is 100%."
+        );
+      }
     }
 
     const report = await updateReport(id, parsedInput);

@@ -96,10 +96,18 @@ export const reportInputSchema = z
       .min(1, "Add at least one work item to the daily report.")
   })
   .refine(
-    (value) => value.completionPct >= value.actualProgressPct,
+    (value) => !(value.completionPct === 100 && value.actualProgressPct < 100),
     {
       message:
-        "Overall completion cannot be less than the actual progress reported.",
+        "Overall completion cannot be 100% if actual progress is less than 100%.",
+      path: ["completionPct"]
+    }
+  )
+  .refine(
+    (value) => !(value.actualProgressPct === 100 && value.completionPct === 0),
+    {
+      message:
+        "Overall completion must be greater than 0% if actual progress is 100%.",
       path: ["completionPct"]
     }
   );
@@ -158,10 +166,21 @@ export const reportPatchSchema = z
     (value) =>
       value.completionPct === undefined ||
       value.actualProgressPct === undefined ||
-      value.completionPct >= value.actualProgressPct,
+      !(value.completionPct === 100 && value.actualProgressPct < 100),
     {
       message:
-        "Overall completion cannot be less than the actual progress reported.",
+        "Overall completion cannot be 100% if actual progress is less than 100%.",
+      path: ["completionPct"]
+    }
+  )
+  .refine(
+    (value) =>
+      value.completionPct === undefined ||
+      value.actualProgressPct === undefined ||
+      !(value.actualProgressPct === 100 && value.completionPct === 0),
+    {
+      message:
+        "Overall completion must be greater than 0% if actual progress is 100%.",
       path: ["completionPct"]
     }
   );
