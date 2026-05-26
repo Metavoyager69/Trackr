@@ -95,6 +95,25 @@ export async function uploadProjectPlanRecord(id: string, file: File) {
     throw new AppValidationError("Project plan file type could not be determined.");
   }
 
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  const allowedExtensions = new Set([
+    "pdf",
+    "doc",
+    "docx",
+    "xls",
+    "xlsx",
+    "png",
+    "jpg",
+    "jpeg",
+    "txt"
+  ]);
+
+  if (!extension || !allowedExtensions.has(extension)) {
+    throw new AppValidationError(
+      "Invalid file extension. Upload a PDF, Word document, Excel sheet, image, or text file."
+    );
+  }
+
   const allowedMimeTypes = new Set([
     "application/pdf",
     "application/msword",
@@ -115,6 +134,40 @@ export async function uploadProjectPlanRecord(id: string, file: File) {
   try {
     const arrayBuffer = (await file.arrayBuffer()) as ArrayBuffer;
     const fileData = new Uint8Array(arrayBuffer);
+
+    // Validate magic bytes for PDF, PNG, and JPEG
+    if (extension === "pdf" || file.type === "application/pdf") {
+      const isPdf =
+        fileData[0] === 0x25 &&
+        fileData[1] === 0x50 &&
+        fileData[2] === 0x44 &&
+        fileData[3] === 0x46;
+      if (!isPdf) {
+        throw new AppValidationError("Invalid file content: Not a valid PDF.");
+      }
+    } else if (extension === "png" || file.type === "image/png") {
+      const isPng =
+        fileData[0] === 0x89 &&
+        fileData[1] === 0x50 &&
+        fileData[2] === 0x4e &&
+        fileData[3] === 0x47;
+      if (!isPng) {
+        throw new AppValidationError("Invalid file content: Not a valid PNG.");
+      }
+    } else if (
+      extension === "jpg" ||
+      extension === "jpeg" ||
+      file.type === "image/jpeg"
+    ) {
+      const isJpeg =
+        fileData[0] === 0xff &&
+        fileData[1] === 0xd8 &&
+        fileData[2] === 0xff;
+      if (!isJpeg) {
+        throw new AppValidationError("Invalid file content: Not a valid JPEG.");
+      }
+    }
+
     const project = await updateProjectPlan(id, {
       fileName: file.name,
       mimeType: file.type,
@@ -129,6 +182,9 @@ export async function uploadProjectPlanRecord(id: string, file: File) {
 
     return project;
   } catch (error) {
+    if (error instanceof AppValidationError) {
+      throw error;
+    }
     logError("project.plan_upload_failed", { projectId: id }, error);
     throw normalizeServiceError(error, "Could not upload the project plan.");
   }
