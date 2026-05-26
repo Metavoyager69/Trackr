@@ -3,7 +3,14 @@ import type { ProgressSnapshot, Report } from "./report-types";
 export type Project = {
   id: string;
   name: string;
+  projectType: string | null;
+  location: string | null;
+  plannedDurationDays: number | null;
   goalSummary: string;
+  projectPlanFileName: string | null;
+  projectPlanMimeType: string | null;
+  projectPlanUploadedAt: string | null;
+  hasProjectPlan: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -27,6 +34,9 @@ export type ProjectDetail = ProjectSummary & {
 
 export type CreateProjectInput = {
   name: string;
+  projectType: string;
+  location: string;
+  plannedDurationDays: number;
   goalSummary: string;
 };
 

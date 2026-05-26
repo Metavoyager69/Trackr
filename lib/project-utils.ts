@@ -12,7 +12,14 @@ import {
 type ProjectShape = {
   id: string;
   name: string;
+  projectType: string | null;
+  location: string | null;
+  plannedDurationDays: number | null;
   goalSummary: string;
+  projectPlanFileName: string | null;
+  projectPlanMimeType: string | null;
+  projectPlanUploadedAt: Date | null;
+  projectPlanFileData?: Uint8Array | Buffer | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -54,7 +61,14 @@ export function serializeProjectSummary(
   return {
     id: project.id,
     name: project.name,
+    projectType: project.projectType,
+    location: project.location,
+    plannedDurationDays: project.plannedDurationDays,
     goalSummary: project.goalSummary,
+    projectPlanFileName: project.projectPlanFileName,
+    projectPlanMimeType: project.projectPlanMimeType,
+    projectPlanUploadedAt: project.projectPlanUploadedAt?.toISOString() ?? null,
+    hasProjectPlan: Boolean(project.projectPlanFileName),
     createdAt: project.createdAt.toISOString(),
     updatedAt: project.updatedAt.toISOString(),
     latestReportId: latestReport?.id ?? null,
@@ -82,7 +96,14 @@ export function serializeProjectDetail(
   return {
     id: project.id,
     name: project.name,
+    projectType: project.projectType,
+    location: project.location,
+    plannedDurationDays: project.plannedDurationDays,
     goalSummary: project.goalSummary,
+    projectPlanFileName: project.projectPlanFileName,
+    projectPlanMimeType: project.projectPlanMimeType,
+    projectPlanUploadedAt: project.projectPlanUploadedAt?.toISOString() ?? null,
+    hasProjectPlan: Boolean(project.projectPlanFileName),
     createdAt: project.createdAt.toISOString(),
     updatedAt: project.updatedAt.toISOString(),
     latestReportId: latestReport?.id ?? null,
@@ -100,6 +121,9 @@ export function serializeProjectDetail(
 export function toProjectCreateData(input: CreateProjectInput) {
   return {
     name: input.name.trim(),
+    projectType: input.projectType.trim(),
+    location: input.location.trim(),
+    plannedDurationDays: input.plannedDurationDays,
     goalSummary: input.goalSummary.trim()
   };
 }
@@ -107,6 +131,9 @@ export function toProjectCreateData(input: CreateProjectInput) {
 export function toProjectUpdateData(input: UpdateProjectInput) {
   const data: {
     name?: string;
+    projectType?: string;
+    location?: string;
+    plannedDurationDays?: number;
     goalSummary?: string;
   } = {};
 
@@ -116,6 +143,18 @@ export function toProjectUpdateData(input: UpdateProjectInput) {
 
   if (input.goalSummary !== undefined) {
     data.goalSummary = input.goalSummary.trim();
+  }
+
+  if (input.projectType !== undefined) {
+    data.projectType = input.projectType.trim();
+  }
+
+  if (input.location !== undefined) {
+    data.location = input.location.trim();
+  }
+
+  if (input.plannedDurationDays !== undefined) {
+    data.plannedDurationDays = input.plannedDurationDays;
   }
 
   return data;

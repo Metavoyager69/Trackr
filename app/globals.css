@@ -785,6 +785,10 @@ body::before {
   color: var(--danger);
 }
 
+.form-success {
+  color: #c7f7d3;
+}
+
 .detail-summary-card {
   padding: 2rem;
 }
@@ -814,6 +818,12 @@ body::before {
 .detail-meta-grid {
   display: grid;
   gap: 1rem;
+}
+
+.project-plan-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+  gap: 1.5rem;
 }
 
 .work-items-panel {
@@ -847,7 +857,8 @@ body::before {
   .dashboard-layout,
   .create-layout,
   .detail-layout,
-  .page-header {
+  .page-header,
+  .project-plan-grid {
     grid-template-columns: 1fr;
   }
 

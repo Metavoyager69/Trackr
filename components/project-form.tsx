@@ -1,10 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import {
-  createProjectAction,
-  initialCreateProjectFormState
-} from "@/app/projects/create/actions";
+import { createProjectAction } from "@/app/projects/create/actions";
+import { initialCreateProjectFormState } from "@/app/projects/create/form-state";
 
 type ProjectFormProps = {
   databaseConfigured: boolean;
@@ -46,6 +44,49 @@ export function ProjectForm({ databaseConfigured }: ProjectFormProps) {
         />
       </div>
 
+      <div className="field-grid">
+        <div className="field">
+          <label htmlFor="projectType">Project type</label>
+          <input
+            className="form-input"
+            disabled={!databaseConfigured}
+            id="projectType"
+            name="projectType"
+            placeholder="Commercial building"
+            required
+            type="text"
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="location">Project location</label>
+          <input
+            className="form-input"
+            disabled={!databaseConfigured}
+            id="location"
+            name="location"
+            placeholder="Victoria Island, Lagos"
+            required
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div className="field">
+        <label htmlFor="plannedDurationDays">Planned duration (days)</label>
+        <input
+          className="form-input"
+          disabled={!databaseConfigured}
+          id="plannedDurationDays"
+          min={1}
+          name="plannedDurationDays"
+          placeholder="180"
+          required
+          step={1}
+          type="number"
+        />
+      </div>
+
       <div className="field">
         <label htmlFor="goalSummary">End goal summary</label>
         <textarea
@@ -59,8 +100,9 @@ export function ProjectForm({ databaseConfigured }: ProjectFormProps) {
       </div>
 
       <p className="helper-text">
-        The goal summary anchors how daily completion is measured against the
-        final intended outcome.
+        After the project is created, you can upload the baseline project plan
+        from the project detail page to give planned-vs-actual reporting a
+        reference document.
       </p>
 
       {state.error ? (

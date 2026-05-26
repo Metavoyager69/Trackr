@@ -15,30 +15,34 @@ export async function getProjects() {
     return [];
   }
 
-  const projects = await prisma.project.findMany({
-    include: {
-      reports: {
-        take: 1,
-        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
-        include: {
-          workItems: {
-            orderBy: {
-              createdAt: "asc"
+  try {
+    const projects = await prisma.project.findMany({
+      include: {
+        reports: {
+          take: 1,
+          orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+          include: {
+            workItems: {
+              orderBy: {
+                createdAt: "asc"
+              }
             }
           }
-        }
-      },
-      _count: {
-        select: {
-          reports: true
+        },
+        _count: {
+          select: {
+            reports: true
+          }
         }
       }
-    }
-  });
+    });
 
-  return projects
-    .map(serializeProjectSummary)
-    .sort(compareProjectsByLatestActivity);
+    return projects
+      .map(serializeProjectSummary)
+      .sort(compareProjectsByLatestActivity);
+  } catch {
+    return [];
+  }
 }
 
 export async function getProjectOptions() {
@@ -48,15 +52,19 @@ export async function getProjectOptions() {
     return [];
   }
 
-  return prisma.project.findMany({
-    select: {
-      id: true,
-      name: true
-    },
-    orderBy: {
-      name: "asc"
-    }
-  });
+  try {
+    return await prisma.project.findMany({
+      select: {
+        id: true,
+        name: true
+      },
+      orderBy: {
+        name: "asc"
+      }
+    });
+  } catch {
+    return [];
+  }
 }
 
 export async function getProjectById(id: string) {
@@ -66,23 +74,27 @@ export async function getProjectById(id: string) {
     return null;
   }
 
-  const project = await prisma.project.findUnique({
-    where: { id },
-    include: {
-      reports: {
-        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
-        include: {
-          workItems: {
-            orderBy: {
-              createdAt: "asc"
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        reports: {
+          orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+          include: {
+            workItems: {
+              orderBy: {
+                createdAt: "asc"
+              }
             }
           }
         }
       }
-    }
-  });
+    });
 
-  return project ? serializeProjectDetail(project) : null;
+    return project ? serializeProjectDetail(project) : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function createProject(input: CreateProjectInput) {
@@ -136,6 +148,69 @@ export async function updateProject(id: string, input: UpdateProjectInput) {
   });
 
   return serializeProjectDetail(project);
+}
+
+export async function updateProjectPlan(
+  id: string,
+  input: {
+    fileName: string;
+    mimeType: string;
+    fileData: Uint8Array<ArrayBuffer>;
+  }
+) {
+  const prisma = getPrismaClient();
+
+  if (!prisma || !isDatabaseConfigured()) {
+    throw new Error("DATABASE_URL is not configured.");
+  }
+
+  const project = await prisma.project.update({
+    where: { id },
+    data: {
+      projectPlanFileName: input.fileName,
+      projectPlanMimeType: input.mimeType,
+      projectPlanFileData: input.fileData,
+      projectPlanUploadedAt: new Date()
+    },
+    include: {
+      reports: {
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        include: {
+          workItems: {
+            orderBy: {
+              createdAt: "asc"
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return serializeProjectDetail(project);
+}
+
+export async function getProjectPlanAsset(id: string) {
+  const prisma = getPrismaClient();
+
+  if (!prisma) {
+    return null;
+  }
+
+  try {
+    return await prisma.project.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        projectPlanFileName: true,
+        projectPlanMimeType: true,
+        projectPlanFileData: true,
+        projectPlanUploadedAt: true
+      }
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function deleteProject(id: string) {

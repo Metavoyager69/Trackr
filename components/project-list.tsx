@@ -45,6 +45,9 @@ export function ProjectList({
             </span>
           </div>
 
+          <p className="sidebar-copy">
+            {project.projectType ?? "Type not set"} - {project.location ?? "Location not set"}
+          </p>
           <p className="ledger-copy">{project.goalSummary}</p>
 
           <div className="progress-card-grid">
@@ -75,7 +78,10 @@ export function ProjectList({
           </div>
 
           <div className="ledger-footer">
-            <span className="activity-tag">Project Status</span>
+            <span className="activity-tag">
+              {formatPlannedDuration(project.plannedDurationDays)} -{" "}
+              {project.hasProjectPlan ? "Plan on file" : "No plan uploaded"}
+            </span>
             <Link className="inline-link" href={`/projects/${project.id}`}>
               Open Project
             </Link>
@@ -84,4 +90,10 @@ export function ProjectList({
       ))}
     </div>
   );
+}
+
+function formatPlannedDuration(plannedDurationDays: number | null) {
+  return plannedDurationDays === null
+    ? "Duration not set"
+    : `${plannedDurationDays} planned days`;
 }

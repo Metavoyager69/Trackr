@@ -13,8 +13,9 @@ export default async function ProjectsPage() {
           <p className="section-label">Projects</p>
           <h1 className="page-title">Progress Control</h1>
           <p className="page-copy">
-            Monitor each project against planned progress, actual progress, and
-            final completion targets.
+            Monitor each project against planned progress, actual progress,
+            planned duration, project type, site location, and final completion
+            targets.
           </p>
         </div>
         <div className="page-header-actions">

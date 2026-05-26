@@ -10,8 +10,10 @@ export default function CreateProjectPage() {
         <p className="section-label">Project Setup</p>
         <h1 className="page-title">New Project</h1>
         <p className="page-copy">
-          Create a long-lived project record so reports can track planned,
-          actual, and overall completion over time.
+          Create a detailed project record with project type, site location,
+          intended duration, and an outcome description. Once the project is
+          saved, the baseline project plan can be uploaded to the project so
+          progress reports have a direct reference point.
         </p>
 
         <div className="glass-panel create-status">
@@ -23,7 +25,7 @@ export default function CreateProjectPage() {
           </div>
           <p className="muted-copy">
             {databaseConfigured
-              ? "Projects are persisted in PostgreSQL and become selectable in new report entries."
+              ? "Projects are persisted in PostgreSQL, become selectable in new report entries, and can store a baseline plan after creation."
               : "Configure DATABASE_URL before creating the first project."}
           </p>
         </div>

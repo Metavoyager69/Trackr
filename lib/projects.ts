@@ -10,9 +10,11 @@ export type {
 export {
   createProject,
   deleteProject,
+  getProjectPlanAsset,
   getProjectById,
   getProjectOptions,
   getProjects,
-  updateProject
+  updateProject,
+  updateProjectPlan
 } from "./projects-data";
 export { isDatabaseConfigured } from "./prisma";
