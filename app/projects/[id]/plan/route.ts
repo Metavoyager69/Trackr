@@ -1,4 +1,5 @@
 import { findProjectPlanAsset } from "@/lib/server/projects-service";
+import { isSignedIn } from "@/lib/server/session";
 
 type ProjectPlanRouteProps = {
   params: Promise<{
@@ -10,6 +11,12 @@ export async function GET(
   _request: Request,
   { params }: ProjectPlanRouteProps
 ) {
+  const signedIn = await isSignedIn();
+
+  if (!signedIn) {
+    return new Response("Sign in to download project plans.", { status: 401 });
+  }
+
   const { id } = await params;
   const projectPlan = await findProjectPlanAsset(id);
 
@@ -29,7 +36,8 @@ export async function GET(
     headers: {
       "Content-Type": projectPlan.projectPlanMimeType,
       "Content-Disposition": `attachment; filename*=UTF-8''${fileName}`,
-      "Cache-Control": "private, no-store"
+      "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff"
     }
   });
 }
