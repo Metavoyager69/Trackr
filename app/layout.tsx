@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
-import { isSignedIn } from "@/lib/server/session";
+import { getCurrentUser } from "@/lib/server/access-control";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,13 +14,13 @@ type RootLayoutProps = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const signedIn = await isSignedIn();
+  const user = await getCurrentUser();
 
   return (
     <html className="dark" lang="en">
       <body>
         <div className="site-shell">
-          <SiteNav signedIn={signedIn} />
+          <SiteNav user={user} />
           <main className="page-shell">{children}</main>
           <footer className="site-footer">
             <div className="site-footer-row">

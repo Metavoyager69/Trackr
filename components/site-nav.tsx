@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOutAction } from "@/app/sign-out/actions";
+import { signOutAction } from "@/app/logout/actions";
 
 const navItems = [
   {
-    href: "/",
+    href: "/dashboard",
     label: "Dashboard"
   },
   {
@@ -20,49 +20,55 @@ const navItems = [
 ];
 
 type SiteNavProps = {
-  signedIn: boolean;
+  user: { fullName: string; organizationName: string; role: string } | null;
 };
 
-export function SiteNav({ signedIn }: SiteNavProps) {
+export function SiteNav({ user }: SiteNavProps) {
   const pathname = usePathname();
 
   return (
     <nav className="top-nav">
       <div className="nav-cluster">
         <Link className="brand-mark" href="/">
-          Trackr
+          {user ? user.organizationName : "Trackr"}
         </Link>
 
-        <div className="nav-links" aria-label="Primary navigation">
-          {navItems.map((item) => (
-            <Link
-              className={`nav-link ${
-                isActiveRoute(item.href, pathname) ? "active" : ""
-              }`}
-              href={item.href}
-              key={item.href}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
+        {user && (
+          <div className="nav-links" aria-label="Primary navigation">
+            {navItems.map((item) => (
+              <Link
+                className={`nav-link ${
+                  isActiveRoute(item.href, pathname) ? "active" : ""
+                }`}
+                href={item.href}
+                key={item.href}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="nav-actions">
-        <Link className="nav-button nav-button-secondary" href="/projects/create">
-          New Project
-        </Link>
-        <Link className="nav-button nav-button-primary" href="/reports/create">
-          New Report
-        </Link>
-        {signedIn ? (
-          <form action={signOutAction}>
-            <button className="nav-button nav-button-secondary" type="submit">
-              Sign Out
-            </button>
-          </form>
+        {user ? (
+          <>
+            {user.role === "ADMIN" && (
+              <Link className="nav-button nav-button-secondary" href="/projects/create">
+                New Project
+              </Link>
+            )}
+            <Link className="nav-button nav-button-primary" href="/reports/create">
+              New Report
+            </Link>
+            <form action={signOutAction}>
+              <button className="nav-button nav-button-secondary" type="submit">
+                Sign Out ({user.fullName})
+              </button>
+            </form>
+          </>
         ) : (
-          <Link className="nav-button nav-button-secondary" href="/sign-in">
+          <Link className="nav-button nav-button-secondary" href="/login">
             Sign In
           </Link>
         )}
