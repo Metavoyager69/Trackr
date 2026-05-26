@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
   let response = NextResponse.next();
   
   const isPublicRoute = PUBLIC_ROUTES.some(route => pathname.startsWith(route));
-  const hasSession = request.cookies.has("trackr_session");
+  const hasSession = request.cookies.has("sitelog_session");
   
   // Protect all non-public routes
   if (!isPublicRoute && !hasSession && pathname !== "/") {

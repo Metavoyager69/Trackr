@@ -3,13 +3,13 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { AppConfigurationError } from "./errors";
 
-const COOKIE_NAME = "trackr_session";
+const COOKIE_NAME = "sitelog_session";
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
 
 function getSessionSecret() {
-  const secret = process.env.TRACKR_SESSION_SECRET || process.env.TRACKR_ADMIN_TOKEN;
+  const secret = process.env.SITELOG_SESSION_SECRET || process.env.SITELOG_ADMIN_TOKEN;
   if (!secret) {
-    throw new AppConfigurationError("Set TRACKR_SESSION_SECRET before using the app.");
+    throw new AppConfigurationError("Set SITELOG_SESSION_SECRET before using the app.");
   }
   return secret;
 }

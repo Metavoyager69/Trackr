@@ -4,8 +4,8 @@ import { AppAuthError, AppConfigurationError } from "./errors";
 export type ApiScope = "read" | "write";
 
 export function authorizeApiRequest(request: Request, scope: ApiScope) {
-  const readToken = process.env.TRACKR_API_READ_TOKEN?.trim() ?? "";
-  const writeToken = process.env.TRACKR_API_WRITE_TOKEN?.trim() ?? "";
+  const readToken = process.env.SITELOG_API_READ_TOKEN?.trim() ?? "";
+  const writeToken = process.env.SITELOG_API_WRITE_TOKEN?.trim() ?? "";
 
   const placeholders = new Set([
     "replace-with-read-token",
@@ -20,13 +20,13 @@ export function authorizeApiRequest(request: Request, scope: ApiScope) {
 
   if (scope === "write" && !writeToken) {
     throw new AppConfigurationError(
-      "Configure TRACKR_API_WRITE_TOKEN before exposing write API routes."
+      "Configure SITELOG_API_WRITE_TOKEN before exposing write API routes."
     );
   }
 
   if (scope === "read" && !readToken && !writeToken) {
     throw new AppConfigurationError(
-      "Configure TRACKR_API_READ_TOKEN or TRACKR_API_WRITE_TOKEN before exposing API routes."
+      "Configure SITELOG_API_READ_TOKEN or SITELOG_API_WRITE_TOKEN before exposing API routes."
     );
   }
 
