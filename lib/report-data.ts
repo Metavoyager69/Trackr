@@ -1,6 +1,7 @@
 import "server-only";
 import type { CreateReportInput, UpdateReportInput } from "./report-types";
 import { getPrismaClient, isDatabaseConfigured } from "./prisma";
+import { logError } from "./server/logger";
 import {
   serializeReport,
   toReportCreateData,
@@ -28,7 +29,8 @@ export async function getReports() {
     });
 
     return reports.map(serializeReport);
-  } catch {
+  } catch (error) {
+    logError("reports.list_failed", {}, error);
     return [];
   }
 }
@@ -54,7 +56,8 @@ export async function getReportById(id: string) {
     });
 
     return report ? serializeReport(report) : null;
-  } catch {
+  } catch (error) {
+    logError("reports.get_failed", { reportId: id }, error);
     return null;
   }
 }

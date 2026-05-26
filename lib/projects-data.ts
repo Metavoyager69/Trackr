@@ -1,6 +1,7 @@
 import "server-only";
 import type { CreateProjectInput, UpdateProjectInput } from "./project-types";
 import { getPrismaClient, isDatabaseConfigured } from "./prisma";
+import { logError } from "./server/logger";
 import {
   serializeProjectDetail,
   serializeProjectSummary,
@@ -40,7 +41,8 @@ export async function getProjects() {
     return projects
       .map(serializeProjectSummary)
       .sort(compareProjectsByLatestActivity);
-  } catch {
+  } catch (error) {
+    logError("projects.list_failed", {}, error);
     return [];
   }
 }
@@ -62,7 +64,8 @@ export async function getProjectOptions() {
         name: "asc"
       }
     });
-  } catch {
+  } catch (error) {
+    logError("projects.options_failed", {}, error);
     return [];
   }
 }
@@ -92,7 +95,8 @@ export async function getProjectById(id: string) {
     });
 
     return project ? serializeProjectDetail(project) : null;
-  } catch {
+  } catch (error) {
+    logError("projects.get_failed", { projectId: id }, error);
     return null;
   }
 }
@@ -208,7 +212,8 @@ export async function getProjectPlanAsset(id: string) {
         projectPlanUploadedAt: true
       }
     });
-  } catch {
+  } catch (error) {
+    logError("projects.get_plan_failed", { projectId: id }, error);
     return null;
   }
 }
