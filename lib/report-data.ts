@@ -7,16 +7,23 @@ import {
   toReportCreateData,
   toReportUpdateData
 } from "./report-utils";
+import { requireCurrentUser, scopeQueryByOrganization, assertCanAccessReport, assertCanAccessProject } from "./server/access-control";
 
 export async function getReports() {
+  const user = await requireCurrentUser();
   const prisma = getPrismaClient();
 
   if (!prisma) {
     return [];
   }
 
+  const scopedWhere = scopeQueryByOrganization(user);
+
   try {
     const reports = await prisma.report.findMany({
+      where: {
+        project: scopedWhere
+      },
       include: {
         project: true,
         workItems: {
@@ -36,6 +43,9 @@ export async function getReports() {
 }
 
 export async function getReportById(id: string) {
+  const user = await requireCurrentUser();
+  await assertCanAccessReport(user, id, "read");
+
   const prisma = getPrismaClient();
 
   if (!prisma) {
@@ -63,6 +73,9 @@ export async function getReportById(id: string) {
 }
 
 export async function createReport(input: CreateReportInput) {
+  const user = await requireCurrentUser();
+  await assertCanAccessProject(user, input.projectId, "write");
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {
@@ -85,6 +98,9 @@ export async function createReport(input: CreateReportInput) {
 }
 
 export async function updateReport(id: string, input: UpdateReportInput) {
+  const user = await requireCurrentUser();
+  await assertCanAccessReport(user, id, "write");
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {
@@ -108,6 +124,9 @@ export async function updateReport(id: string, input: UpdateReportInput) {
 }
 
 export async function deleteReport(id: string) {
+  const user = await requireCurrentUser();
+  await assertCanAccessReport(user, id, "write");
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {

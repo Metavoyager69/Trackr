@@ -1,5 +1,5 @@
 import { findProjectPlanAsset } from "@/lib/server/projects-service";
-import { isSignedIn } from "@/lib/server/session";
+import { getCurrentUser } from "@/lib/server/access-control";
 
 type ProjectPlanRouteProps = {
   params: Promise<{
@@ -11,9 +11,9 @@ export async function GET(
   _request: Request,
   { params }: ProjectPlanRouteProps
 ) {
-  const signedIn = await isSignedIn();
+  const user = await getCurrentUser();
 
-  if (!signedIn) {
+  if (!user) {
     return new Response("Sign in to download project plans.", { status: 401 });
   }
 

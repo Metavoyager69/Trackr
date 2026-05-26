@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getErrorMessage } from "@/lib/server/errors";
 import { createReportRecord } from "@/lib/server/reports-service";
-import { authorizeServerAction } from "@/lib/server/session";
+import { requireCurrentUser } from "@/lib/server/access-control";
 import type { CreateReportFormState } from "./form-state";
 
 export async function createReportAction(
@@ -13,7 +13,7 @@ export async function createReportAction(
 ): Promise<CreateReportFormState> {
   let reportId: string;
   try {
-    await authorizeServerAction();
+    await requireCurrentUser();
 
     const report = await createReportRecord({
       projectId: getFormValue(formData, "projectId"),

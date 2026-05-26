@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getErrorMessage } from "@/lib/server/errors";
 import { createProjectRecord } from "@/lib/server/projects-service";
-import { authorizeServerAction } from "@/lib/server/session";
+import { requireCurrentUser } from "@/lib/server/access-control";
 import type { CreateProjectFormState } from "./form-state";
 
 export async function createProjectAction(
@@ -13,7 +13,7 @@ export async function createProjectAction(
 ): Promise<CreateProjectFormState> {
   let projectId: string;
   try {
-    await authorizeServerAction();
+    await requireCurrentUser();
 
     const project = await createProjectRecord({
       name: getFormValue(formData, "name"),

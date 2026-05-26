@@ -8,16 +8,21 @@ import {
   toProjectCreateData,
   toProjectUpdateData
 } from "./project-utils";
+import { requireCurrentUser, scopeQueryByOrganization, assertCanAccessProject, assertIsAdmin } from "./server/access-control";
 
 export async function getProjects() {
+  const user = await requireCurrentUser();
   const prisma = getPrismaClient();
 
   if (!prisma) {
     return [];
   }
 
+  const scopedWhere = scopeQueryByOrganization(user);
+
   try {
     const projects = await prisma.project.findMany({
+      where: scopedWhere,
       include: {
         reports: {
           take: 1,
@@ -48,14 +53,18 @@ export async function getProjects() {
 }
 
 export async function getProjectOptions() {
+  const user = await requireCurrentUser();
   const prisma = getPrismaClient();
 
   if (!prisma) {
     return [];
   }
 
+  const scopedWhere = scopeQueryByOrganization(user);
+
   try {
     return await prisma.project.findMany({
+      where: scopedWhere,
       select: {
         id: true,
         name: true
@@ -71,6 +80,9 @@ export async function getProjectOptions() {
 }
 
 export async function getProjectById(id: string) {
+  const user = await requireCurrentUser();
+  await assertCanAccessProject(user, id, "read");
+  
   const prisma = getPrismaClient();
 
   if (!prisma) {
@@ -102,6 +114,9 @@ export async function getProjectById(id: string) {
 }
 
 export async function createProject(input: CreateProjectInput) {
+  const user = await requireCurrentUser();
+  assertIsAdmin(user);
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {
@@ -109,7 +124,10 @@ export async function createProject(input: CreateProjectInput) {
   }
 
   const project = await prisma.project.create({
-    data: toProjectCreateData(input),
+    data: {
+      ...toProjectCreateData(input),
+      organizationId: user.organizationId
+    },
     include: {
       reports: {
         orderBy: [{ date: "desc" }, { createdAt: "desc" }],
@@ -128,6 +146,9 @@ export async function createProject(input: CreateProjectInput) {
 }
 
 export async function updateProject(id: string, input: UpdateProjectInput) {
+  const user = await requireCurrentUser();
+  await assertCanAccessProject(user, id, "write");
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {
@@ -162,6 +183,9 @@ export async function updateProjectPlan(
     fileData: Uint8Array<ArrayBuffer>;
   }
 ) {
+  const user = await requireCurrentUser();
+  await assertCanAccessProject(user, id, "write");
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {
@@ -194,6 +218,9 @@ export async function updateProjectPlan(
 }
 
 export async function getProjectPlanAsset(id: string) {
+  const user = await requireCurrentUser();
+  await assertCanAccessProject(user, id, "read");
+
   const prisma = getPrismaClient();
 
   if (!prisma) {
@@ -219,6 +246,9 @@ export async function getProjectPlanAsset(id: string) {
 }
 
 export async function deleteProject(id: string) {
+  const user = await requireCurrentUser();
+  await assertCanAccessProject(user, id, "write");
+
   const prisma = getPrismaClient();
 
   if (!prisma || !isDatabaseConfigured()) {

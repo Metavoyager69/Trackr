@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getErrorMessage } from "@/lib/server/errors";
 import { uploadProjectPlanRecord } from "@/lib/server/projects-service";
-import { authorizeServerAction } from "@/lib/server/session";
+import { requireCurrentUser } from "@/lib/server/access-control";
 import type { UploadProjectPlanFormState } from "./form-state";
 
 export async function uploadProjectPlanAction(
@@ -12,7 +12,7 @@ export async function uploadProjectPlanAction(
   formData: FormData
 ): Promise<UploadProjectPlanFormState> {
   try {
-    await authorizeServerAction();
+    await requireCurrentUser();
   } catch (error) {
     return {
       error: getErrorMessage(error, "Sign in to upload a project plan."),
