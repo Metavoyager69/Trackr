@@ -26,3 +26,10 @@ pnpm-debug.log*
 .next-dev.err.log
 .next-dev-3001.log
 .next-dev-3001.err.log
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# IDE configurations
+.claude/
+

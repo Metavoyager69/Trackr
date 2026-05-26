@@ -20,14 +20,31 @@ export type ProjectModel = runtime.Types.Result.DefaultSelection<Prisma.$Project
 
 export type AggregateProject = {
   _count: ProjectCountAggregateOutputType | null
+  _avg: ProjectAvgAggregateOutputType | null
+  _sum: ProjectSumAggregateOutputType | null
   _min: ProjectMinAggregateOutputType | null
   _max: ProjectMaxAggregateOutputType | null
+}
+
+export type ProjectAvgAggregateOutputType = {
+  plannedDurationDays: number | null
+}
+
+export type ProjectSumAggregateOutputType = {
+  plannedDurationDays: number | null
 }
 
 export type ProjectMinAggregateOutputType = {
   id: string | null
   name: string | null
+  projectType: string | null
+  location: string | null
+  plannedDurationDays: number | null
   goalSummary: string | null
+  projectPlanFileName: string | null
+  projectPlanMimeType: string | null
+  projectPlanFileData: runtime.Bytes | null
+  projectPlanUploadedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -35,7 +52,14 @@ export type ProjectMinAggregateOutputType = {
 export type ProjectMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  projectType: string | null
+  location: string | null
+  plannedDurationDays: number | null
   goalSummary: string | null
+  projectPlanFileName: string | null
+  projectPlanMimeType: string | null
+  projectPlanFileData: runtime.Bytes | null
+  projectPlanUploadedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -43,17 +67,39 @@ export type ProjectMaxAggregateOutputType = {
 export type ProjectCountAggregateOutputType = {
   id: number
   name: number
+  projectType: number
+  location: number
+  plannedDurationDays: number
   goalSummary: number
+  projectPlanFileName: number
+  projectPlanMimeType: number
+  projectPlanFileData: number
+  projectPlanUploadedAt: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type ProjectAvgAggregateInputType = {
+  plannedDurationDays?: true
+}
+
+export type ProjectSumAggregateInputType = {
+  plannedDurationDays?: true
+}
+
 export type ProjectMinAggregateInputType = {
   id?: true
   name?: true
+  projectType?: true
+  location?: true
+  plannedDurationDays?: true
   goalSummary?: true
+  projectPlanFileName?: true
+  projectPlanMimeType?: true
+  projectPlanFileData?: true
+  projectPlanUploadedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -61,7 +107,14 @@ export type ProjectMinAggregateInputType = {
 export type ProjectMaxAggregateInputType = {
   id?: true
   name?: true
+  projectType?: true
+  location?: true
+  plannedDurationDays?: true
   goalSummary?: true
+  projectPlanFileName?: true
+  projectPlanMimeType?: true
+  projectPlanFileData?: true
+  projectPlanUploadedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -69,7 +122,14 @@ export type ProjectMaxAggregateInputType = {
 export type ProjectCountAggregateInputType = {
   id?: true
   name?: true
+  projectType?: true
+  location?: true
+  plannedDurationDays?: true
   goalSummary?: true
+  projectPlanFileName?: true
+  projectPlanMimeType?: true
+  projectPlanFileData?: true
+  projectPlanUploadedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -113,6 +173,18 @@ export type ProjectAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ProjectAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ProjectSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ProjectMinAggregateInputType
@@ -143,6 +215,8 @@ export type ProjectGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: ProjectCountAggregateInputType | true
+  _avg?: ProjectAvgAggregateInputType
+  _sum?: ProjectSumAggregateInputType
   _min?: ProjectMinAggregateInputType
   _max?: ProjectMaxAggregateInputType
 }
@@ -150,10 +224,19 @@ export type ProjectGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type ProjectGroupByOutputType = {
   id: string
   name: string
+  projectType: string | null
+  location: string | null
+  plannedDurationDays: number | null
   goalSummary: string
+  projectPlanFileName: string | null
+  projectPlanMimeType: string | null
+  projectPlanFileData: runtime.Bytes | null
+  projectPlanUploadedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
+  _avg: ProjectAvgAggregateOutputType | null
+  _sum: ProjectSumAggregateOutputType | null
   _min: ProjectMinAggregateOutputType | null
   _max: ProjectMaxAggregateOutputType | null
 }
@@ -179,7 +262,14 @@ export type ProjectWhereInput = {
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   id?: Prisma.StringFilter<"Project"> | string
   name?: Prisma.StringFilter<"Project"> | string
+  projectType?: Prisma.StringNullableFilter<"Project"> | string | null
+  location?: Prisma.StringNullableFilter<"Project"> | string | null
+  plannedDurationDays?: Prisma.IntNullableFilter<"Project"> | number | null
   goalSummary?: Prisma.StringFilter<"Project"> | string
+  projectPlanFileName?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectPlanMimeType?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectPlanFileData?: Prisma.BytesNullableFilter<"Project"> | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   reports?: Prisma.ReportListRelationFilter
@@ -188,7 +278,14 @@ export type ProjectWhereInput = {
 export type ProjectOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  projectType?: Prisma.SortOrderInput | Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  plannedDurationDays?: Prisma.SortOrderInput | Prisma.SortOrder
   goalSummary?: Prisma.SortOrder
+  projectPlanFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectPlanMimeType?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectPlanFileData?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectPlanUploadedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   reports?: Prisma.ReportOrderByRelationAggregateInput
@@ -200,7 +297,14 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
+  projectType?: Prisma.StringNullableFilter<"Project"> | string | null
+  location?: Prisma.StringNullableFilter<"Project"> | string | null
+  plannedDurationDays?: Prisma.IntNullableFilter<"Project"> | number | null
   goalSummary?: Prisma.StringFilter<"Project"> | string
+  projectPlanFileName?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectPlanMimeType?: Prisma.StringNullableFilter<"Project"> | string | null
+  projectPlanFileData?: Prisma.BytesNullableFilter<"Project"> | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   reports?: Prisma.ReportListRelationFilter
@@ -209,12 +313,21 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
 export type ProjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  projectType?: Prisma.SortOrderInput | Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  plannedDurationDays?: Prisma.SortOrderInput | Prisma.SortOrder
   goalSummary?: Prisma.SortOrder
+  projectPlanFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectPlanMimeType?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectPlanFileData?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectPlanUploadedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
+  _avg?: Prisma.ProjectAvgOrderByAggregateInput
   _max?: Prisma.ProjectMaxOrderByAggregateInput
   _min?: Prisma.ProjectMinOrderByAggregateInput
+  _sum?: Prisma.ProjectSumOrderByAggregateInput
 }
 
 export type ProjectScalarWhereWithAggregatesInput = {
@@ -223,7 +336,14 @@ export type ProjectScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ProjectScalarWhereWithAggregatesInput | Prisma.ProjectScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Project"> | string
   name?: Prisma.StringWithAggregatesFilter<"Project"> | string
+  projectType?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  location?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  plannedDurationDays?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   goalSummary?: Prisma.StringWithAggregatesFilter<"Project"> | string
+  projectPlanFileName?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  projectPlanMimeType?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  projectPlanFileData?: Prisma.BytesNullableWithAggregatesFilter<"Project"> | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
@@ -231,7 +351,14 @@ export type ProjectScalarWhereWithAggregatesInput = {
 export type ProjectCreateInput = {
   id?: string
   name: string
+  projectType?: string | null
+  location?: string | null
+  plannedDurationDays?: number | null
   goalSummary: string
+  projectPlanFileName?: string | null
+  projectPlanMimeType?: string | null
+  projectPlanFileData?: runtime.Bytes | null
+  projectPlanUploadedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportCreateNestedManyWithoutProjectInput
@@ -240,7 +367,14 @@ export type ProjectCreateInput = {
 export type ProjectUncheckedCreateInput = {
   id?: string
   name: string
+  projectType?: string | null
+  location?: string | null
+  plannedDurationDays?: number | null
   goalSummary: string
+  projectPlanFileName?: string | null
+  projectPlanMimeType?: string | null
+  projectPlanFileData?: runtime.Bytes | null
+  projectPlanUploadedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutProjectInput
@@ -249,7 +383,14 @@ export type ProjectUncheckedCreateInput = {
 export type ProjectUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  projectType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plannedDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   goalSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  projectPlanFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanMimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanFileData?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUpdateManyWithoutProjectNestedInput
@@ -258,7 +399,14 @@ export type ProjectUpdateInput = {
 export type ProjectUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  projectType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plannedDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   goalSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  projectPlanFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanMimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanFileData?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutProjectNestedInput
@@ -267,7 +415,14 @@ export type ProjectUncheckedUpdateInput = {
 export type ProjectCreateManyInput = {
   id?: string
   name: string
+  projectType?: string | null
+  location?: string | null
+  plannedDurationDays?: number | null
   goalSummary: string
+  projectPlanFileName?: string | null
+  projectPlanMimeType?: string | null
+  projectPlanFileData?: runtime.Bytes | null
+  projectPlanUploadedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -275,7 +430,14 @@ export type ProjectCreateManyInput = {
 export type ProjectUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  projectType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plannedDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   goalSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  projectPlanFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanMimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanFileData?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -283,7 +445,14 @@ export type ProjectUpdateManyMutationInput = {
 export type ProjectUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  projectType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plannedDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   goalSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  projectPlanFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanMimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanFileData?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -291,15 +460,33 @@ export type ProjectUncheckedUpdateManyInput = {
 export type ProjectCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  projectType?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  plannedDurationDays?: Prisma.SortOrder
   goalSummary?: Prisma.SortOrder
+  projectPlanFileName?: Prisma.SortOrder
+  projectPlanMimeType?: Prisma.SortOrder
+  projectPlanFileData?: Prisma.SortOrder
+  projectPlanUploadedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ProjectAvgOrderByAggregateInput = {
+  plannedDurationDays?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  projectType?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  plannedDurationDays?: Prisma.SortOrder
   goalSummary?: Prisma.SortOrder
+  projectPlanFileName?: Prisma.SortOrder
+  projectPlanMimeType?: Prisma.SortOrder
+  projectPlanFileData?: Prisma.SortOrder
+  projectPlanUploadedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -307,9 +494,20 @@ export type ProjectMaxOrderByAggregateInput = {
 export type ProjectMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  projectType?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  plannedDurationDays?: Prisma.SortOrder
   goalSummary?: Prisma.SortOrder
+  projectPlanFileName?: Prisma.SortOrder
+  projectPlanMimeType?: Prisma.SortOrder
+  projectPlanFileData?: Prisma.SortOrder
+  projectPlanUploadedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ProjectSumOrderByAggregateInput = {
+  plannedDurationDays?: Prisma.SortOrder
 }
 
 export type ProjectScalarRelationFilter = {
@@ -319,6 +517,26 @@ export type ProjectScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableBytesFieldUpdateOperationsInput = {
+  set?: runtime.Bytes | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -342,7 +560,14 @@ export type ProjectUpdateOneRequiredWithoutReportsNestedInput = {
 export type ProjectCreateWithoutReportsInput = {
   id?: string
   name: string
+  projectType?: string | null
+  location?: string | null
+  plannedDurationDays?: number | null
   goalSummary: string
+  projectPlanFileName?: string | null
+  projectPlanMimeType?: string | null
+  projectPlanFileData?: runtime.Bytes | null
+  projectPlanUploadedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -350,7 +575,14 @@ export type ProjectCreateWithoutReportsInput = {
 export type ProjectUncheckedCreateWithoutReportsInput = {
   id?: string
   name: string
+  projectType?: string | null
+  location?: string | null
+  plannedDurationDays?: number | null
   goalSummary: string
+  projectPlanFileName?: string | null
+  projectPlanMimeType?: string | null
+  projectPlanFileData?: runtime.Bytes | null
+  projectPlanUploadedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -374,7 +606,14 @@ export type ProjectUpdateToOneWithWhereWithoutReportsInput = {
 export type ProjectUpdateWithoutReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  projectType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plannedDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   goalSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  projectPlanFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanMimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanFileData?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -382,7 +621,14 @@ export type ProjectUpdateWithoutReportsInput = {
 export type ProjectUncheckedUpdateWithoutReportsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  projectType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plannedDurationDays?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   goalSummary?: Prisma.StringFieldUpdateOperationsInput | string
+  projectPlanFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanMimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectPlanFileData?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  projectPlanUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -421,7 +667,14 @@ export type ProjectCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  projectType?: boolean
+  location?: boolean
+  plannedDurationDays?: boolean
   goalSummary?: boolean
+  projectPlanFileName?: boolean
+  projectPlanMimeType?: boolean
+  projectPlanFileData?: boolean
+  projectPlanUploadedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   reports?: boolean | Prisma.Project$reportsArgs<ExtArgs>
@@ -431,7 +684,14 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  projectType?: boolean
+  location?: boolean
+  plannedDurationDays?: boolean
   goalSummary?: boolean
+  projectPlanFileName?: boolean
+  projectPlanMimeType?: boolean
+  projectPlanFileData?: boolean
+  projectPlanUploadedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["project"]>
@@ -439,7 +699,14 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  projectType?: boolean
+  location?: boolean
+  plannedDurationDays?: boolean
   goalSummary?: boolean
+  projectPlanFileName?: boolean
+  projectPlanMimeType?: boolean
+  projectPlanFileData?: boolean
+  projectPlanUploadedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["project"]>
@@ -447,12 +714,19 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ProjectSelectScalar = {
   id?: boolean
   name?: boolean
+  projectType?: boolean
+  location?: boolean
+  plannedDurationDays?: boolean
   goalSummary?: boolean
+  projectPlanFileName?: boolean
+  projectPlanMimeType?: boolean
+  projectPlanFileData?: boolean
+  projectPlanUploadedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "goalSummary" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "projectType" | "location" | "plannedDurationDays" | "goalSummary" | "projectPlanFileName" | "projectPlanMimeType" | "projectPlanFileData" | "projectPlanUploadedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reports?: boolean | Prisma.Project$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -468,7 +742,14 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    projectType: string | null
+    location: string | null
+    plannedDurationDays: number | null
     goalSummary: string
+    projectPlanFileName: string | null
+    projectPlanMimeType: string | null
+    projectPlanFileData: runtime.Bytes | null
+    projectPlanUploadedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -897,7 +1178,14 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
 export interface ProjectFieldRefs {
   readonly id: Prisma.FieldRef<"Project", 'String'>
   readonly name: Prisma.FieldRef<"Project", 'String'>
+  readonly projectType: Prisma.FieldRef<"Project", 'String'>
+  readonly location: Prisma.FieldRef<"Project", 'String'>
+  readonly plannedDurationDays: Prisma.FieldRef<"Project", 'Int'>
   readonly goalSummary: Prisma.FieldRef<"Project", 'String'>
+  readonly projectPlanFileName: Prisma.FieldRef<"Project", 'String'>
+  readonly projectPlanMimeType: Prisma.FieldRef<"Project", 'String'>
+  readonly projectPlanFileData: Prisma.FieldRef<"Project", 'Bytes'>
+  readonly projectPlanUploadedAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }

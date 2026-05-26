@@ -14,6 +14,9 @@ const prisma = new PrismaClient({ adapter });
 const demoProjects = [
   {
     name: "Skyline North Foundation",
+    projectType: "Commercial building",
+    location: "Victoria Island, Lagos",
+    plannedDurationDays: 240,
     goalSummary:
       "Complete the substructure, foundation slabs, and support works for the north tower footprint.",
     reports: [
@@ -70,6 +73,9 @@ const demoProjects = [
   },
   {
     name: "Bridge Transit Link",
+    projectType: "Transport infrastructure",
+    location: "Lekki-Epe Corridor, Lagos",
+    plannedDurationDays: 365,
     goalSummary:
       "Deliver the primary bridge deck support system and associated approach works.",
     reports: [
@@ -107,10 +113,16 @@ async function main() {
         name: demoProject.name
       },
       update: {
+        projectType: demoProject.projectType,
+        location: demoProject.location,
+        plannedDurationDays: demoProject.plannedDurationDays,
         goalSummary: demoProject.goalSummary
       },
       create: {
         name: demoProject.name,
+        projectType: demoProject.projectType,
+        location: demoProject.location,
+        plannedDurationDays: demoProject.plannedDurationDays,
         goalSummary: demoProject.goalSummary
       }
     });

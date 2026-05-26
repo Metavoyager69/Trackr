@@ -75,7 +75,14 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  projectType: 'projectType',
+  location: 'location',
+  plannedDurationDays: 'plannedDurationDays',
   goalSummary: 'goalSummary',
+  projectPlanFileName: 'projectPlanFileName',
+  projectPlanMimeType: 'projectPlanMimeType',
+  projectPlanFileData: 'projectPlanFileData',
+  projectPlanUploadedAt: 'projectPlanUploadedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
