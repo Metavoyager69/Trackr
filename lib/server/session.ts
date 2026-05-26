@@ -1,107 +1,67 @@
 import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
-import { AppAuthError, AppConfigurationError } from "./errors";
+import { AppConfigurationError } from "./errors";
 
 const COOKIE_NAME = "trackr_session";
-const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 8;
+const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
 
-function readAdminToken() {
-  return process.env.TRACKR_ADMIN_TOKEN?.trim() ?? "";
-}
-
-function requireAdminToken() {
-  const token = readAdminToken();
-
-  if (!token) {
-    throw new AppConfigurationError(
-      "Set TRACKR_ADMIN_TOKEN before using the app."
-    );
+function getSessionSecret() {
+  const secret = process.env.TRACKR_SESSION_SECRET || process.env.TRACKR_ADMIN_TOKEN;
+  if (!secret) {
+    throw new AppConfigurationError("Set TRACKR_SESSION_SECRET before using the app.");
   }
-
-  return token;
+  return secret;
 }
 
-function tokensMatch(left: string, right: string) {
-  const leftBuffer = Buffer.from(left);
-  const rightBuffer = Buffer.from(right);
+export type SessionPayload = {
+  userId: string;
+};
 
-  if (leftBuffer.length !== rightBuffer.length) {
-    return false;
-  }
-
-  return timingSafeEqual(leftBuffer, rightBuffer);
-}
-
-function signSession(expiryTimestamp: number, adminToken: string): string {
-  const payload = expiryTimestamp.toString();
-  const signature = createHmac("sha256", adminToken).update(payload).digest("hex");
+function signSession(userId: string, expiryTimestamp: number, secret: string): string {
+  const payload = `${userId}:${expiryTimestamp}`;
+  const signature = createHmac("sha256", secret).update(payload).digest("hex");
   return `${payload}.${signature}`;
 }
 
-function verifySession(cookieValue: string, adminToken: string): boolean {
-  const dotIndex = cookieValue.indexOf(".");
+export function verifyAndDecodeSession(cookieValue: string, secret: string): SessionPayload | null {
+  const dotIndex = cookieValue.lastIndexOf(".");
   if (dotIndex === -1) {
-    return false;
+    return null;
   }
 
   const payload = cookieValue.slice(0, dotIndex);
   const signature = cookieValue.slice(dotIndex + 1);
 
-  const expectedSignature = createHmac("sha256", adminToken).update(payload).digest("hex");
+  const expectedSignature = createHmac("sha256", secret).update(payload).digest("hex");
 
   const sigBuffer = Buffer.from(signature);
   const expectedBuffer = Buffer.from(expectedSignature);
 
   if (sigBuffer.length !== expectedBuffer.length) {
-    return false;
+    return null;
   }
 
   const match = timingSafeEqual(sigBuffer, expectedBuffer);
   if (!match) {
-    return false;
+    return null;
   }
 
-  const expiryTimestamp = Number(payload);
-  if (Number.isNaN(expiryTimestamp)) {
-    return false;
+  const [userId, expiryStr] = payload.split(":");
+  if (!userId || !expiryStr) return null;
+
+  const expiryTimestamp = Number(expiryStr);
+  if (Number.isNaN(expiryTimestamp) || expiryTimestamp < Date.now()) {
+    return null;
   }
 
-  return expiryTimestamp > Date.now();
+  return { userId };
 }
 
-export async function authorizeServerAction() {
-  const adminToken = requireAdminToken();
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get(COOKIE_NAME)?.value ?? "";
-
-  if (!sessionCookie || !verifySession(sessionCookie, adminToken)) {
-    throw new AppAuthError("Sign in to perform this action.");
-  }
-}
-
-export async function isSignedIn(): Promise<boolean> {
-  const adminToken = readAdminToken();
-
-  if (!adminToken) {
-    return false;
-  }
-
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get(COOKIE_NAME)?.value ?? "";
-
-  return Boolean(sessionCookie) && verifySession(sessionCookie, adminToken);
-}
-
-export async function createSessionCookie(submittedToken: string) {
-  const adminToken = requireAdminToken();
-
-  if (!tokensMatch(submittedToken, adminToken)) {
-    throw new AppAuthError("Invalid admin token.");
-  }
-
+export async function createSessionCookie(userId: string) {
+  const secret = getSessionSecret();
   const expiryTimestamp = Date.now() + COOKIE_MAX_AGE_SECONDS * 1000;
-  const sessionValue = signSession(expiryTimestamp, adminToken);
+  const sessionValue = signSession(userId, expiryTimestamp, secret);
 
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, sessionValue, {
@@ -116,4 +76,19 @@ export async function createSessionCookie(submittedToken: string) {
 export async function clearSessionCookie() {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
+}
+
+export async function getSessionCookiePayload(): Promise<SessionPayload | null> {
+  let secret: string;
+  try {
+    secret = getSessionSecret();
+  } catch {
+    return null;
+  }
+  
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(COOKIE_NAME)?.value;
+  if (!sessionCookie) return null;
+
+  return verifyAndDecodeSession(sessionCookie, secret);
 }
