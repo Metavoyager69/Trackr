@@ -14,19 +14,23 @@ export async function getReports() {
     return [];
   }
 
-  const reports = await prisma.report.findMany({
-    include: {
-      project: true,
-      workItems: {
-        orderBy: {
-          createdAt: "asc"
+  try {
+    const reports = await prisma.report.findMany({
+      include: {
+        project: true,
+        workItems: {
+          orderBy: {
+            createdAt: "asc"
+          }
         }
-      }
-    },
-    orderBy: [{ date: "desc" }, { createdAt: "desc" }]
-  });
+      },
+      orderBy: [{ date: "desc" }, { createdAt: "desc" }]
+    });
 
-  return reports.map(serializeReport);
+    return reports.map(serializeReport);
+  } catch {
+    return [];
+  }
 }
 
 export async function getReportById(id: string) {
@@ -36,19 +40,23 @@ export async function getReportById(id: string) {
     return null;
   }
 
-  const report = await prisma.report.findUnique({
-    where: { id },
-    include: {
-      project: true,
-      workItems: {
-        orderBy: {
-          createdAt: "asc"
+  try {
+    const report = await prisma.report.findUnique({
+      where: { id },
+      include: {
+        project: true,
+        workItems: {
+          orderBy: {
+            createdAt: "asc"
+          }
         }
       }
-    }
-  });
+    });
 
-  return report ? serializeReport(report) : null;
+    return report ? serializeReport(report) : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function createReport(input: CreateReportInput) {

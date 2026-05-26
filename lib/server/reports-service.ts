@@ -9,7 +9,7 @@ import {
 } from "@/lib/reports";
 import { isDatabaseConfigured } from "@/lib/prisma";
 import { mapDatabaseError } from "./db-errors";
-import { AppConfigurationError, AppValidationError } from "./errors";
+import { AppConfigurationError, AppValidationError, AppNotFoundError } from "./errors";
 import { logError, logInfo } from "./logger";
 import { reportInputSchema, reportPatchSchema } from "./validation";
 
@@ -46,6 +46,32 @@ export async function updateReportRecord(id: string, input: unknown) {
 
   try {
     const parsedInput = reportPatchSchema.parse(input);
+    const existing = await findReportById(id);
+
+    if (!existing) {
+      throw new AppNotFoundError("Report not found.");
+    }
+
+    const finalCompletion =
+      parsedInput.completionPct !== undefined
+        ? parsedInput.completionPct
+        : existing.completionPct;
+
+    const finalActual =
+      parsedInput.actualProgressPct !== undefined
+        ? parsedInput.actualProgressPct
+        : existing.actualProgressPct;
+
+    if (
+      finalCompletion !== null &&
+      finalActual !== null &&
+      finalCompletion < finalActual
+    ) {
+      throw new AppValidationError(
+        "Overall completion cannot be less than the actual progress reported."
+      );
+    }
+
     const report = await updateReport(id, parsedInput);
 
     logInfo("report.update", {

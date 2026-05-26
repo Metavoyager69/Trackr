@@ -4,20 +4,17 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getErrorMessage } from "@/lib/server/errors";
 import { createReportRecord } from "@/lib/server/reports-service";
-
-export type CreateReportFormState = {
-  error: string | null;
-};
-
-export const initialCreateReportFormState: CreateReportFormState = {
-  error: null
-};
+import { authorizeServerAction } from "@/lib/server/session";
+import type { CreateReportFormState } from "./form-state";
 
 export async function createReportAction(
   _previousState: CreateReportFormState,
   formData: FormData
 ): Promise<CreateReportFormState> {
+  let reportId: string;
   try {
+    await authorizeServerAction();
+
     const report = await createReportRecord({
       projectId: getFormValue(formData, "projectId"),
       date: getFormValue(formData, "date"),
@@ -29,17 +26,20 @@ export async function createReportAction(
       workItems: parseWorkItems(formData)
     });
 
+    reportId = report.id;
+
     revalidatePath("/");
     revalidatePath("/projects");
     revalidatePath(`/projects/${report.projectId}`);
     revalidatePath("/reports");
     revalidatePath(`/reports/${report.id}`);
-    redirect(`/reports/${report.id}`);
   } catch (error) {
     return {
       error: getErrorMessage(error, "Could not save the report.")
     };
   }
+
+  redirect(`/reports/${reportId}`);
 }
 
 function getFormValue(formData: FormData, key: string) {

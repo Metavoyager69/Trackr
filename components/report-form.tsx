@@ -4,10 +4,8 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { ProjectOption } from "@/lib/projects";
-import {
-  createReportAction,
-  initialCreateReportFormState
-} from "@/app/reports/create/actions";
+import { createReportAction } from "@/app/reports/create/actions";
+import { initialCreateReportFormState } from "@/app/reports/create/form-state";
 
 type ReportFormProps = {
   databaseConfigured: boolean;
